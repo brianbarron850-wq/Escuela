@@ -45,10 +45,6 @@ h3{font-size:15px;font-weight:600;color:var(--text)}
 .login-logo h1{font-size:22px;font-weight:700;color:var(--navy)}
 .login-logo p{font-size:12px;color:var(--muted);margin-top:4px}
 .login-note{color:var(--navy-text);font-size:12px;text-align:center;opacity:.7}
-.api-bar{display:flex;gap:8px;width:340px}
-.api-bar input{flex:1;padding:9px 12px;border-radius:var(--r);border:1px solid rgba(255,255,255,.2);
-  background:rgba(255,255,255,.1);color:#fff}
-.api-bar input::placeholder{color:rgba(255,255,255,.5)}
 
 /* ═══════════════════════════════════════════════════════
    APP SHELL
@@ -283,10 +279,6 @@ input[type=radio]{accent-color:var(--blue)}
 
 <!-- ═══════════════ LOGIN ═══════════════ -->
 <div id="login-page">
-  <div class="api-bar">
-    <input id="api-url-input" type="url" placeholder="URL del Web App (Apps Script)…" oninput="State.apiUrl=this.value">
-    <button class="btn btn-secondary" onclick="runSetup()" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.2)">Inicializar</button>
-  </div>
   <div class="login-card">
     <div class="login-logo">
       <h1>📚 SGD</h1>
@@ -305,11 +297,7 @@ input[type=radio]{accent-color:var(--blue)}
         Iniciar sesión
       </button>
     </div>
-    <p class="text-muted" style="margin-top:14px;text-align:center">
-      Credenciales por defecto: <b>admin / admin123</b>
-    </p>
   </div>
-  <p class="login-note">Ingresa la URL del Web App de Google Apps Script arriba para conectar</p>
 </div>
 
 <!-- ═══════════════ APP ═══════════════ -->
@@ -432,7 +420,6 @@ input[type=radio]{accent-color:var(--blue)}
       <span class="tb-title" id="topbar-title">Dashboard</span>
       <div class="tb-right">
         <span class="user-chip">Sesión: <b id="tb-user">—</b></span>
-        <button class="btn btn-sm btn-secondary" onclick="showApiConfig()">⚙️ API</button>
       </div>
     </header>
 
@@ -792,9 +779,12 @@ input[type=radio]{accent-color:var(--blue)}
 <script>
 'use strict';
 
+/* ── URL DEL BACKEND — edita solo esta línea ─────────── */
+const API_URL = 'https://script.google.com/macros/s/AKfycbz-PYPpJdi0ZoK_u_Mf9sxLwYGQ2UiEYJ26LHEGrIHPA3tSqFHWVZ_5eZgASGLI2vqH6A/exec';
+
 /* ── ESTADO ──────────────────────────────────────────── */
 const State = {
-  apiUrl: localStorage.getItem('apiUrl') || '',
+  apiUrl: API_URL,
   token:  localStorage.getItem('token')  || '',
   user:   JSON.parse(localStorage.getItem('user') || 'null'),
   view:   'dashboard',
@@ -806,7 +796,10 @@ const State = {
 
 /* ── API ─────────────────────────────────────────────── */
 async function api(action, data = {}) {
-  if (!State.apiUrl) { toast('Configura la URL del API primero', 'err'); return null; }
+  if (!State.apiUrl || State.apiUrl.includes('TU_URL_AQUI')) {
+    toast('Define API_URL en el archivo index.html antes de usar el sistema', 'err');
+    return null;
+  }
   try {
     const res = await fetch(State.apiUrl, {
       method: 'POST',
@@ -834,10 +827,6 @@ async function doLogin() {
   const username = document.getElementById('inp-user').value.trim();
   const password = document.getElementById('inp-pass').value;
   if (!username || !password) { toast('Ingresa usuario y contraseña', 'warn'); return; }
-  if (!State.apiUrl) {
-    State.apiUrl = document.getElementById('api-url-input').value.trim();
-    localStorage.setItem('apiUrl', State.apiUrl);
-  }
   const r = await api('login', { username, password });
   if (!r) return;
   State.token = r.token;
@@ -850,31 +839,13 @@ async function doLogin() {
 async function doLogout() {
   await api('logout', {});
   State.token = ''; State.user = null;
-  localStorage.removeItem('token'); localStorage.removeItem('user');
-  document.getElementById('app').style.display   = 'none';
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  document.getElementById('app').style.display        = 'none';
   document.getElementById('login-page').style.display = 'flex';
 }
 
-function showApiConfig() {
-  const url = prompt('URL del Web App de Google Apps Script:', State.apiUrl);
-  if (url !== null) {
-    State.apiUrl = url.trim();
-    localStorage.setItem('apiUrl', State.apiUrl);
-    toast('URL guardada', 'ok');
-  }
-}
 
-async function runSetup() {
-  State.apiUrl = document.getElementById('api-url-input').value.trim();
-  localStorage.setItem('apiUrl', State.apiUrl);
-  if (!State.apiUrl) { toast('Ingresa la URL primero', 'warn'); return; }
-  const r = await api('setup', {});
-  if (r) {
-    let msg = r.message;
-    if (r.default_credentials) msg += `\nUsuario: ${r.default_credentials.username} / ${r.default_credentials.password}`;
-    alert(msg);
-  }
-}
 
 /* ── INIT ────────────────────────────────────────────── */
 function initApp() {
@@ -1826,13 +1797,8 @@ async function editAttendance(id) {
 
 /* ── STARTUP ─────────────────────────────────────────── */
 window.addEventListener('load', () => {
-  // Pre-fill API URL if stored
-  const savedUrl = localStorage.getItem('apiUrl');
-  if (savedUrl) document.getElementById('api-url-input').value = savedUrl;
-
-  // Auto-login if token exists
-  if (State.token && State.user && savedUrl) {
-    State.apiUrl = savedUrl;
+  // Auto-login si ya hay sesión guardada
+  if (State.token && State.user) {
     initApp();
   } else {
     document.getElementById('login-page').style.display = 'flex';
