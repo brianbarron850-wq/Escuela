@@ -296,6 +296,9 @@ input[type=radio]{accent-color:var(--blue)}
       <button class="btn btn-primary" onclick="doLogin()" style="width:100%;justify-content:center;padding:10px">
         Iniciar sesión
       </button>
+      <p class="text-muted" style="margin-top:14px;text-align:center;font-size:12px">
+        Primer acceso: <b>admin</b> / <b>1234</b>
+      </p>
     </div>
   </div>
 </div>
@@ -800,36 +803,22 @@ async function api(action, data = {}) {
     toast('Define API_URL en el archivo index.html antes de usar el sistema', 'err');
     return null;
   }
-
-  // Función interna para manejar la respuesta
-  function handleResponse(j) {
-    if (!j.ok) {
-      // Sesión expirada o no autenticado → regresar al login
-      if (j.code === 401 || j.error?.includes('autenticado') || j.error?.includes('expirada')) {
-        clearSession();
-        document.getElementById('app').style.display = 'none';
-        document.getElementById('login-page').style.display = 'flex';
-        toast('Sesión expirada. Por favor inicia sesión nuevamente.', 'warn');
-        return null;
-      }
-      toast(j.error || 'Error desconocido', 'err');
-      return null;
-    }
-    return j;
-  }
-
   try {
     const res = await fetch(State.apiUrl, {
       method: 'POST',
       body: JSON.stringify({ action, token: State.token, data }),
     });
-    return handleResponse(await res.json());
+    const j = await res.json();
+    if (!j.ok) { toast(j.error || 'Error desconocido', 'err'); return null; }
+    return j;
   } catch (_) {
     try {
       const p = new URLSearchParams({ action, token: State.token });
       if (Object.keys(data).length) p.set('data', JSON.stringify(data));
       const res = await fetch(`${State.apiUrl}?${p}`);
-      return handleResponse(await res.json());
+      const j = await res.json();
+      if (!j.ok) { toast(j.error || 'Error', 'err'); return null; }
+      return j;
     } catch (e) {
       toast('Error de conexión: ' + e.message, 'err'); return null;
     }
@@ -852,7 +841,9 @@ async function doLogin() {
 
 async function doLogout() {
   await api('logout', {});
-  clearSession();
+  State.token = ''; State.user = null;
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
   document.getElementById('app').style.display        = 'none';
   document.getElementById('login-page').style.display = 'flex';
 }
@@ -1807,35 +1798,14 @@ async function editAttendance(id) {
   });
 }
 
-/* ── SESSION ─────────────────────────────────────────── */
-function clearSession() {
-  State.token = ''; State.user = null;
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-}
-
-async function verifyToken() {
-  try {
-    const res = await fetch(State.apiUrl, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'me', token: State.token }),
-    });
-    const j = await res.json();
-    if (j.ok) { State.user = j.user; return true; }
-    return false;
-  } catch(_) { return false; }
-}
-
 /* ── STARTUP ─────────────────────────────────────────── */
-window.addEventListener('load', async () => {
-  // Si hay token guardado, verificar con el backend antes de entrar
+window.addEventListener('load', () => {
+  // Auto-login si ya hay sesión guardada
   if (State.token && State.user) {
-    const valid = await verifyToken();
-    if (valid) { initApp(); return; }
-    // Token inválido o expirado → limpiar y mostrar login
-    clearSession();
+    initApp();
+  } else {
+    document.getElementById('login-page').style.display = 'flex';
   }
-  document.getElementById('login-page').style.display = 'flex';
 });
 
 // Close modal on overlay click
