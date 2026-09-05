@@ -6,186 +6,148 @@
 <title>SGD — Gestión Docente</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* ═══════════════════════════════════════════════════════
-   TOKENS
-═══════════════════════════════════════════════════════ */
 :root{
-  --navy:#1e3a5f; --navy-dark:#152d4a; --navy-text:#c8d8ea;
-  --blue:#2563eb; --blue-light:#dbeafe;
-  --bg:#f0f4f8; --surface:#fff; --border:#d1dce8;
-  --text:#1a2940; --muted:#5a7491;
-  --green:#15803d; --green-bg:#dcfce7;
-  --red:#b91c1c; --red-bg:#fee2e2;
-  --amber:#b45309; --amber-bg:#fef3c7;
-  --indigo:#1d4ed8; --indigo-bg:#dbeafe;
-  --r:6px; --shadow:0 1px 3px rgba(0,0,0,.12);
-  --sidebar-w:220px;
+  --navy:#1e3a5f;--navy-d:#152d4a;--navy-t:#c8d8ea;
+  --blue:#2563eb;--blue-l:#dbeafe;
+  --bg:#f0f4f8;--surface:#fff;--border:#d1dce8;
+  --text:#1a2940;--muted:#5a7491;
+  --green:#15803d;--green-bg:#dcfce7;
+  --red:#b91c1c;--red-bg:#fee2e2;
+  --amber:#b45309;--amber-bg:#fef3c7;
+  --indigo:#1d4ed8;--indigo-bg:#dbeafe;
+  --r:6px;--shadow:0 1px 3px rgba(0,0,0,.12);
+  --sw:220px;
 }
-
-/* ═══════════════════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;font-size:14px;
-  color:var(--text);background:var(--bg);line-height:1.5}
-a{color:var(--blue);text-decoration:none}
+body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;font-size:14px;color:var(--text);background:var(--bg);line-height:1.5}
 button{cursor:pointer;font-family:inherit;font-size:14px;border:none;outline:none}
 input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
-h2{font-size:18px;font-weight:600;color:var(--text)}
-h3{font-size:15px;font-weight:600;color:var(--text)}
+h2{font-size:18px;font-weight:600}h3{font-size:15px;font-weight:600}
 
-/* ═══════════════════════════════════════════════════════
-   LOGIN
-═══════════════════════════════════════════════════════ */
+/* LOGIN */
 #login-page{min-height:100vh;background:var(--navy);display:flex;align-items:center;
-  justify-content:center;flex-direction:column;gap:24px}
-.login-card{background:#fff;border-radius:10px;padding:40px 36px;width:340px;
+  justify-content:center;flex-direction:column;gap:20px}
+.login-card{background:#fff;border-radius:10px;padding:36px;width:340px;
   box-shadow:0 8px 32px rgba(0,0,0,.25)}
-.login-logo{text-align:center;margin-bottom:28px}
-.login-logo h1{font-size:22px;font-weight:700;color:var(--navy)}
-.login-logo p{font-size:12px;color:var(--muted);margin-top:4px}
-.login-note{color:var(--navy-text);font-size:12px;text-align:center;opacity:.7}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo h1{font-size:24px;font-weight:700;color:var(--navy)}
+.login-logo p{font-size:12px;color:var(--muted);margin-top:2px}
+.demo-btn{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);
+  padding:10px 24px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;
+  transition:.15s}
+.demo-btn:hover{background:rgba(255,255,255,.2)}
+.demo-badge{background:#f59e0b;color:#fff;font-size:10px;font-weight:700;
+  padding:2px 6px;border-radius:10px;margin-left:6px;vertical-align:middle}
 
-/* ═══════════════════════════════════════════════════════
-   APP SHELL
-═══════════════════════════════════════════════════════ */
+/* APP */
 #app{display:none;height:100vh;overflow:hidden}
-#sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+#sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sw);
   background:var(--navy);overflow-y:auto;display:flex;flex-direction:column;z-index:100}
-#main{margin-left:var(--sidebar-w);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+#main{margin-left:var(--sw);display:flex;flex-direction:column;height:100vh;overflow:hidden}
 #topbar{background:#fff;border-bottom:1px solid var(--border);height:52px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;flex-shrink:0;box-shadow:var(--shadow)}
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  flex-shrink:0;box-shadow:var(--shadow)}
 #content{flex:1;overflow-y:auto;padding:24px}
 
-/* ═══════════════════════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════════════════════ */
+/* SIDEBAR */
 .sb-header{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sb-header h1{font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px}
-.sb-header p{font-size:11px;color:var(--navy-text);margin-top:2px}
-.sb-section{padding:10px 0}
+.sb-header p{font-size:11px;color:var(--navy-t);margin-top:2px}
+.sb-section{padding:8px 0}
 .sb-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.35);
-  padding:6px 18px 4px;letter-spacing:1px;text-transform:uppercase}
+  padding:6px 18px 2px;letter-spacing:1px;text-transform:uppercase}
 .nav-item{display:flex;align-items:center;gap:10px;padding:8px 18px;
-  color:var(--navy-text);cursor:pointer;transition:all .15s;font-size:13px;border:none;
-  background:none;width:100%;text-align:left;border-left:3px solid transparent}
+  color:var(--navy-t);cursor:pointer;transition:all .15s;font-size:13px;
+  border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent}
 .nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
 .nav-item.active{background:rgba(37,99,235,.25);color:#fff;border-left-color:var(--blue)}
-.nav-item .ic{width:18px;text-align:center;font-size:15px}
+.nav-item .ic{width:18px;text-align:center;font-size:14px}
 .sb-footer{margin-top:auto;padding:12px 18px;border-top:1px solid rgba(255,255,255,.1)}
+.demo-ribbon{background:#f59e0b;color:#fff;text-align:center;font-size:11px;
+  font-weight:700;padding:4px;letter-spacing:.5px}
 
-/* ═══════════════════════════════════════════════════════
-   TOPBAR
-═══════════════════════════════════════════════════════ */
-.tb-title{font-weight:600;font-size:15px;color:var(--text)}
-.tb-right{display:flex;align-items:center;gap:12px}
+/* TOPBAR */
+.tb-title{font-weight:600;font-size:15px}
+.tb-right{display:flex;align-items:center;gap:10px}
 .user-chip{font-size:12px;color:var(--muted)}
 .user-chip b{color:var(--text)}
 
-/* ═══════════════════════════════════════════════════════
-   VIEWS
-═══════════════════════════════════════════════════════ */
-.view{display:none}
-.view.active{display:block}
+/* VIEWS */
+.view{display:none}.view.active{display:block}
 
-/* ═══════════════════════════════════════════════════════
-   CARDS & GRID
-═══════════════════════════════════════════════════════ */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;margin-bottom:24px}
 .stat-card{background:#fff;border-radius:var(--r);padding:18px 16px;
   border:1px solid var(--border);border-left:4px solid var(--blue)}
-.stat-card .val{font-size:28px;font-weight:700;color:var(--navy);line-height:1}
+.stat-card .val{font-size:30px;font-weight:700;color:var(--navy);line-height:1}
 .stat-card .lbl{font-size:12px;color:var(--muted);margin-top:4px}
-.stat-card.green{border-left-color:var(--green)}
-.stat-card.amber{border-left-color:#d97706}
-.stat-card.red{border-left-color:var(--red)}
-.stat-card.indigo{border-left-color:var(--indigo)}
-.stat-card.teal{border-left-color:#0d9488}
+.stat-card.c1{border-left-color:#2563eb}.stat-card.c2{border-left-color:#7c3aed}
+.stat-card.c3{border-left-color:#0d9488}.stat-card.c4{border-left-color:#d97706}
+.stat-card.c5{border-left-color:#15803d}.stat-card.c6{border-left-color:#dc2626}
 
+/* CARDS */
 .section-card{background:#fff;border-radius:var(--r);border:1px solid var(--border);
   padding:20px;margin-bottom:20px}
 .section-header{display:flex;align-items:center;justify-content:space-between;
   margin-bottom:16px;gap:12px;flex-wrap:wrap}
 
-/* ═══════════════════════════════════════════════════════
-   BUTTONS
-═══════════════════════════════════════════════════════ */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);
-  font-weight:500;transition:all .15s;font-size:13px;line-height:1}
-.btn-primary{background:var(--blue);color:#fff}
-.btn-primary:hover{background:#1d4ed8}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
+  border-radius:var(--r);font-weight:500;transition:.15s;font-size:13px;line-height:1}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#1d4ed8}
 .btn-secondary{background:#fff;color:var(--text);border:1px solid var(--border)}
 .btn-secondary:hover{background:var(--bg)}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{background:#991b1b}
-.btn-success{background:var(--green);color:#fff}
-.btn-success:hover{background:#166534}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{background:#991b1b}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{background:#166534}
+.btn-amber{background:#d97706;color:#fff}.btn-amber:hover{background:#b45309}
 .btn-sm{padding:4px 10px;font-size:12px}
-.btn-icon{padding:6px 8px}
 .btn-group{display:flex;gap:8px;flex-wrap:wrap}
 
-/* ═══════════════════════════════════════════════════════
-   TABLES
-═══════════════════════════════════════════════════════ */
+/* TABLES */
 .tbl-wrap{overflow-x:auto}
 .tbl-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-.tbl-search{padding:7px 12px;border:1px solid var(--border);border-radius:var(--r);
-  width:220px;background:#fff}
+.tbl-search{padding:7px 12px;border:1px solid var(--border);border-radius:var(--r);width:220px;background:#fff}
 .tbl-search:focus{outline:none;border-color:var(--blue)}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:var(--bg);padding:9px 12px;text-align:left;font-weight:600;
-  color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;font-size:12px}
+th{background:var(--bg);padding:9px 12px;text-align:left;font-weight:600;color:var(--muted);
+  border-bottom:2px solid var(--border);white-space:nowrap;font-size:12px}
 td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
 tr:hover td{background:#f8fafc}
 .tbl-empty{text-align:center;color:var(--muted);padding:40px;font-style:italic}
-.tbl-count{font-size:12px;color:var(--muted)}
 
-/* ═══════════════════════════════════════════════════════
-   BADGES
-═══════════════════════════════════════════════════════ */
+/* BADGES */
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
 .badge-active,.badge-present,.badge-open{background:var(--green-bg);color:var(--green)}
-.badge-deleted,.badge-absent,.badge-closed{background:var(--red-bg);color:var(--red)}
+.badge-deleted,.badge-absent,.badge-closed,.badge-danger{background:var(--red-bg);color:var(--red)}
 .badge-late,.badge-warning{background:var(--amber-bg);color:var(--amber)}
-.badge-justified,.badge-info{background:var(--indigo-bg);color:var(--indigo)}
+.badge-justified,.badge-info,.badge-indigo{background:var(--indigo-bg);color:var(--indigo)}
 .badge-inactive,.badge-transferred,.badge-default{background:#f1f5f9;color:var(--muted)}
 .badge-graded{background:var(--green-bg);color:var(--green)}
 .badge-pending{background:var(--amber-bg);color:var(--amber)}
 
-/* ═══════════════════════════════════════════════════════
-   TABS
-═══════════════════════════════════════════════════════ */
-.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:20px;
-  overflow-x:auto;flex-wrap:nowrap}
-.tab{padding:9px 16px;color:var(--muted);font-weight:500;font-size:13px;
-  border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;
-  margin-bottom:-2px;white-space:nowrap;transition:all .15s}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 16px;color:var(--muted);font-weight:500;font-size:13px;border:none;
+  background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
+  white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--text)}.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
 
-/* ═══════════════════════════════════════════════════════
-   FORMS (inside modal)
-═══════════════════════════════════════════════════════ */
+/* FORMS */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-grid .full{grid-column:1/-1}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:12px;font-weight:600;color:var(--muted)}
-.field input,.field select,.field textarea{
-  padding:8px 10px;border:1px solid var(--border);border-radius:var(--r);
-  background:#fff;transition:.15s}
+.field input,.field select,.field textarea{padding:8px 10px;border:1px solid var(--border);
+  border-radius:var(--r);background:#fff;transition:.15s}
 .field input:focus,.field select:focus,.field textarea:focus{
-  outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
+  outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
 .field textarea{resize:vertical;min-height:80px}
-.field .hint{font-size:11px;color:var(--muted)}
 
-/* ═══════════════════════════════════════════════════════
-   MODAL
-═══════════════════════════════════════════════════════ */
+/* MODAL */
 #modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,25,45,.5);
   z-index:1000;align-items:center;justify-content:center;padding:16px}
 #modal-overlay.open{display:flex}
-#modal-box{background:#fff;border-radius:10px;width:100%;max-width:680px;max-height:90vh;
+#modal-box{background:#fff;border-radius:10px;width:100%;max-width:660px;max-height:90vh;
   display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .modal-head{display:flex;align-items:center;justify-content:space-between;
   padding:18px 22px;border-bottom:1px solid var(--border)}
@@ -194,91 +156,64 @@ tr:hover td{background:#f8fafc}
 .modal-foot{display:flex;justify-content:flex-end;gap:10px;
   padding:14px 22px;border-top:1px solid var(--border)}
 
-/* ═══════════════════════════════════════════════════════
-   ATTENDANCE CHECKLIST
-═══════════════════════════════════════════════════════ */
+/* ATTENDANCE */
 .att-list{display:flex;flex-direction:column;gap:6px}
 .att-row{display:flex;align-items:center;gap:10px;padding:8px 12px;
   border:1px solid var(--border);border-radius:var(--r);background:#fff}
 .att-name{flex:1;font-weight:500}
 .att-radios{display:flex;gap:6px}
-.att-radio{display:flex;align-items:center;gap:4px;cursor:pointer;
-  padding:4px 8px;border-radius:4px;font-size:12px;font-weight:500}
-input[type=radio]{accent-color:var(--blue)}
-.att-radio.p{color:var(--green)} .att-radio.a{color:var(--red)}
-.att-radio.l{color:var(--amber)} .att-radio.j{color:var(--indigo)}
+.att-radio{display:flex;align-items:center;gap:4px;cursor:pointer;padding:4px 8px;
+  border-radius:4px;font-size:12px;font-weight:500}
 
-/* ═══════════════════════════════════════════════════════
-   GRADING GRID
-═══════════════════════════════════════════════════════ */
+/* GRADE ROWS */
 .grade-row{display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;
   align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}
 .grade-row:last-child{border-bottom:none}
 
-/* ═══════════════════════════════════════════════════════
-   TIMELINE
-═══════════════════════════════════════════════════════ */
+/* TIMELINE */
 .timeline{position:relative;padding-left:24px}
-.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;
-  width:2px;background:var(--border)}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
 .tl-item{position:relative;margin-bottom:16px}
 .tl-dot{position:absolute;left:-20px;top:4px;width:12px;height:12px;
   border-radius:50%;background:var(--blue);border:2px solid #fff;box-shadow:0 0 0 2px var(--blue)}
-.tl-dot.obs{background:var(--amber)}
-.tl-dot.grade{background:var(--green)}
+.tl-dot.obs{background:var(--amber)}.tl-dot.grade{background:var(--green)}
 .tl-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:12px}
 .tl-card .tl-meta{font-size:11px;color:var(--muted);margin-bottom:4px}
 
-/* ═══════════════════════════════════════════════════════
-   CHART CONTAINER
-═══════════════════════════════════════════════════════ */
-.chart-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--r);
-  padding:20px;margin-bottom:20px}
+/* CHARTS */
+.chart-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px}
 .chart-title{font-weight:600;margin-bottom:14px;font-size:14px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 
-/* ═══════════════════════════════════════════════════════
-   TOASTS
-═══════════════════════════════════════════════════════ */
-#toasts{position:fixed;bottom:20px;right:20px;z-index:2000;
-  display:flex;flex-direction:column;gap:8px}
-.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;
-  border-radius:var(--r);font-size:13px;font-weight:500;
-  box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:250px;max-width:380px;
-  animation:slideIn .2s ease;color:#fff}
-.toast.ok{background:var(--green)} .toast.err{background:var(--red)}
-.toast.info{background:var(--blue)} .toast.warn{background:var(--amber)}
+/* TOASTS */
+#toasts{position:fixed;bottom:20px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r);
+  font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.15);
+  min-width:250px;max-width:380px;animation:slideIn .2s ease;color:#fff}
+.toast.ok{background:var(--green)}.toast.err{background:var(--red)}
+.toast.info{background:var(--blue)}.toast.warn{background:#d97706}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
-/* ═══════════════════════════════════════════════════════
-   LOADING
-═══════════════════════════════════════════════════════ */
-.loading{display:flex;align-items:center;justify-content:center;
-  padding:40px;color:var(--muted);gap:8px}
-.spinner{width:18px;height:18px;border:2px solid var(--border);
-  border-top-color:var(--blue);border-radius:50%;animation:spin .6s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ═══════════════════════════════════════════════════════
-   REPORT TABLE
-═══════════════════════════════════════════════════════ */
-.rpt-pct{font-weight:700}
-.pct-high{color:var(--green)} .pct-mid{color:var(--amber)} .pct-low{color:var(--red)}
-
-/* ═══════════════════════════════════════════════════════
-   MISC
-═══════════════════════════════════════════════════════ */
-.flex{display:flex} .gap{gap:10px} .flex-1{flex:1} .items-center{align-items:center}
-.mt{margin-top:16px} .mb{margin-bottom:16px} .text-muted{color:var(--muted);font-size:12px}
-.text-right{text-align:right}
-.alert{padding:12px 16px;border-radius:var(--r);font-size:13px;margin-bottom:16px}
-.alert-info{background:var(--blue-light);color:var(--indigo)}
+/* MISC */
+.alert{padding:12px 16px;border-radius:var(--r);font-size:13px;margin-bottom:14px}
+.alert-info{background:var(--blue-l);color:var(--indigo)}
 .alert-warn{background:var(--amber-bg);color:var(--amber)}
+.text-muted{color:var(--muted);font-size:12px}
+.flex{display:flex}.gap{gap:10px}.items-center{align-items:center}
+.rpt-pct{font-weight:700}
+.pct-high{color:var(--green)}.pct-mid{color:var(--amber)}.pct-low{color:var(--red)}
+.ann-card{border:1px solid var(--border);border-radius:var(--r);padding:16px;
+  margin-bottom:12px;background:#fff}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.kpi .kv{font-size:22px;font-weight:700;color:var(--navy)}
+.kpi .kl{font-size:11px;color:var(--muted);margin-top:2px}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ LOGIN ═══════════════ -->
-<div id="login-page">
+<!-- ═══════ LOGIN (visible por defecto) ═══════ -->
+<div id="login-page" style="display:flex">
   <div class="login-card">
     <div class="login-logo">
       <h1>📚 SGD</h1>
@@ -287,39 +222,43 @@ input[type=radio]{accent-color:var(--blue)}
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="field">
         <label>Usuario</label>
-        <input id="inp-user" type="text" placeholder="admin" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+        <input id="inp-user" type="text" placeholder="admin" autocomplete="username"
+               onkeydown="if(event.key==='Enter')doLogin()">
       </div>
       <div class="field">
         <label>Contraseña</label>
-        <input id="inp-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        <input id="inp-pass" type="password" placeholder="••••••••" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter')doLogin()">
       </div>
-      <button class="btn btn-primary" onclick="doLogin()" style="width:100%;justify-content:center;padding:10px">
-        Iniciar sesión
-      </button>
-      <p class="text-muted" style="margin-top:14px;text-align:center;font-size:12px">
-        Primer acceso: <b>admin</b> / <b>1234</b>
-      </p>
+      <button class="btn btn-primary" onclick="doLogin()"
+              style="width:100%;justify-content:center;padding:10px">Iniciar sesión</button>
+      <p class="text-muted" style="text-align:center">Primer acceso: <b>admin</b> / <b>1234</b></p>
     </div>
   </div>
+  <button class="demo-btn" onclick="loadDemo()">
+    🎭 Explorar en modo demo <span class="demo-badge">SIN DATOS REALES</span>
+  </button>
+  <p style="color:rgba(255,255,255,.4);font-size:11px">
+    Modo demo: muestra datos de ejemplo sin conectar al backend
+  </p>
 </div>
 
-<!-- ═══════════════ APP ═══════════════ -->
-<div id="app">
+<!-- ═══════ APP (oculta hasta login) ═══════ -->
+<div id="app" style="display:none">
 
   <!-- SIDEBAR -->
   <nav id="sidebar">
+    <div id="demo-ribbon" class="demo-ribbon" style="display:none">🎭 MODO DEMO</div>
     <div class="sb-header">
       <h1>📚 SGD</h1>
       <p>Gestión Docente</p>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">General</div>
       <button class="nav-item active" data-view="dashboard" onclick="nav('dashboard')">
         <span class="ic">📊</span> Dashboard
       </button>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">Institución</div>
       <button class="nav-item" data-view="institution" onclick="nav('institution')">
@@ -335,7 +274,6 @@ input[type=radio]{accent-color:var(--blue)}
         <span class="ic">🗂️</span> Departamentos
       </button>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">Académico</div>
       <button class="nav-item" data-view="subjects" onclick="nav('subjects')">
@@ -348,7 +286,6 @@ input[type=radio]{accent-color:var(--blue)}
         <span class="ic">🔗</span> Asignaciones
       </button>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">Alumnos</div>
       <button class="nav-item" data-view="students" onclick="nav('students')">
@@ -358,7 +295,6 @@ input[type=radio]{accent-color:var(--blue)}
         <span class="ic">📋</span> Inscripciones
       </button>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">Enseñanza</div>
       <button class="nav-item" data-view="planning" onclick="nav('planning')">
@@ -371,7 +307,6 @@ input[type=radio]{accent-color:var(--blue)}
         <span class="ic">✅</span> Asistencia
       </button>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">Evaluación</div>
       <button class="nav-item" data-view="activities" onclick="nav('activities')">
@@ -381,7 +316,6 @@ input[type=radio]{accent-color:var(--blue)}
         <span class="ic">📊</span> Evaluaciones
       </button>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">Seguimiento</div>
       <button class="nav-item" data-view="tracking" onclick="nav('tracking')">
@@ -394,7 +328,6 @@ input[type=radio]{accent-color:var(--blue)}
         <span class="ic">📈</span> Reportes
       </button>
     </div>
-
     <div class="sb-section">
       <div class="sb-label">Sistema</div>
       <button class="nav-item" id="nav-users" data-view="users" onclick="nav('users')">
@@ -404,14 +337,13 @@ input[type=radio]{accent-color:var(--blue)}
         <span class="ic">📜</span> Auditoría
       </button>
     </div>
-
     <div class="sb-footer">
-      <div style="font-size:12px;color:var(--navy-text);margin-bottom:8px">
+      <div style="font-size:12px;color:var(--navy-t);margin-bottom:8px">
         <b id="sb-username">—</b><br>
         <span id="sb-role" style="opacity:.7">—</span>
       </div>
       <button class="btn btn-sm" onclick="doLogout()"
-        style="background:rgba(255,255,255,.1);color:var(--navy-text);border:1px solid rgba(255,255,255,.15);width:100%;justify-content:center">
+        style="background:rgba(255,255,255,.1);color:var(--navy-t);border:1px solid rgba(255,255,255,.15);width:100%;justify-content:center">
         Cerrar sesión
       </button>
     </div>
@@ -428,22 +360,26 @@ input[type=radio]{accent-color:var(--blue)}
 
     <div id="content">
 
-      <!-- ─── DASHBOARD ─────────────────────────────────── -->
+      <!-- DASHBOARD -->
       <div id="v-dashboard" class="view active">
         <div id="dash-stats" class="stat-grid"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div class="charts-row">
           <div class="chart-wrap">
             <div class="chart-title">Asistencia acumulada</div>
             <canvas id="chart-att" height="180"></canvas>
           </div>
           <div class="chart-wrap">
-            <div class="chart-title">Sesiones recientes</div>
-            <div id="dash-sessions"></div>
+            <div class="chart-title">Calificaciones por rango</div>
+            <canvas id="chart-grades" height="180"></canvas>
           </div>
+        </div>
+        <div class="section-card">
+          <h3 style="margin-bottom:14px">Sesiones recientes</h3>
+          <div id="dash-sessions"></div>
         </div>
       </div>
 
-      <!-- ─── INSTITUCIÓN ───────────────────────────────── -->
+      <!-- INSTITUCIÓN -->
       <div id="v-institution" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -452,13 +388,12 @@ input[type=radio]{accent-color:var(--blue)}
           </div>
           <div class="tbl-toolbar">
             <input class="tbl-search" placeholder="Buscar…" oninput="filterTable('tbl-inst',this.value)">
-            <span class="tbl-count" id="cnt-inst"></span>
           </div>
           <div class="tbl-wrap"><div id="tbl-inst"></div></div>
         </div>
       </div>
 
-      <!-- ─── CICLOS ESCOLARES ──────────────────────────── -->
+      <!-- CICLOS -->
       <div id="v-calendar" class="view">
         <div class="tabs">
           <button class="tab active" onclick="switchTab('cal','years')">Ciclos Escolares</button>
@@ -466,31 +401,25 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
         <div id="cal-years">
           <div class="section-card">
-            <div class="section-header">
-              <h2>Ciclos Escolares</h2>
-              <button class="btn btn-primary" onclick="M.year.create()">+ Nuevo ciclo</button>
-            </div>
+            <div class="section-header"><h2>Ciclos Escolares</h2>
+              <button class="btn btn-primary" onclick="M.year.create()">+ Nuevo ciclo</button></div>
             <div class="tbl-wrap"><div id="tbl-years"></div></div>
           </div>
         </div>
         <div id="cal-periods" style="display:none">
           <div class="section-card">
-            <div class="section-header">
-              <h2>Periodos Académicos</h2>
-              <button class="btn btn-primary" onclick="M.period.create()">+ Nuevo periodo</button>
-            </div>
+            <div class="section-header"><h2>Periodos Académicos</h2>
+              <button class="btn btn-primary" onclick="M.period.create()">+ Nuevo periodo</button></div>
             <div class="tbl-wrap"><div id="tbl-periods"></div></div>
           </div>
         </div>
       </div>
 
-      <!-- ─── GRUPOS ────────────────────────────────────── -->
+      <!-- GRUPOS -->
       <div id="v-groups" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Grupos</h2>
-            <button class="btn btn-primary" onclick="M.group.create()">+ Nuevo grupo</button>
-          </div>
+          <div class="section-header"><h2>Grupos</h2>
+            <button class="btn btn-primary" onclick="M.group.create()">+ Nuevo grupo</button></div>
           <div class="tbl-toolbar">
             <input class="tbl-search" placeholder="Buscar grupo…" oninput="filterTable('tbl-groups',this.value)">
           </div>
@@ -498,24 +427,20 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
       </div>
 
-      <!-- ─── DEPARTAMENTOS ─────────────────────────────── -->
+      <!-- DEPARTAMENTOS -->
       <div id="v-departments" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Departamentos</h2>
-            <button class="btn btn-primary" onclick="M.department.create()">+ Nuevo departamento</button>
-          </div>
+          <div class="section-header"><h2>Departamentos</h2>
+            <button class="btn btn-primary" onclick="M.department.create()">+ Nuevo departamento</button></div>
           <div class="tbl-wrap"><div id="tbl-departments"></div></div>
         </div>
       </div>
 
-      <!-- ─── MATERIAS ───────────────────────────────────── -->
+      <!-- MATERIAS -->
       <div id="v-subjects" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Catálogo de Materias</h2>
-            <button class="btn btn-primary" onclick="M.subject.create()">+ Nueva materia</button>
-          </div>
+          <div class="section-header"><h2>Catálogo de Materias</h2>
+            <button class="btn btn-primary" onclick="M.subject.create()">+ Nueva materia</button></div>
           <div class="tbl-toolbar">
             <input class="tbl-search" placeholder="Buscar materia…" oninput="filterTable('tbl-subjects',this.value)">
           </div>
@@ -523,13 +448,11 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
       </div>
 
-      <!-- ─── DOCENTES ──────────────────────────────────── -->
+      <!-- DOCENTES -->
       <div id="v-teachers" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Docentes</h2>
-            <button class="btn btn-primary" onclick="M.teacher.create()">+ Nuevo docente</button>
-          </div>
+          <div class="section-header"><h2>Docentes</h2>
+            <button class="btn btn-primary" onclick="M.teacher.create()">+ Nuevo docente</button></div>
           <div class="tbl-toolbar">
             <input class="tbl-search" placeholder="Buscar docente…" oninput="filterTable('tbl-teachers',this.value)">
           </div>
@@ -537,13 +460,11 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
       </div>
 
-      <!-- ─── ASIGNACIONES ──────────────────────────────── -->
+      <!-- ASIGNACIONES -->
       <div id="v-assignments" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Asignaciones Docentes</h2>
-            <button class="btn btn-primary" onclick="M.assignment.create()">+ Nueva asignación</button>
-          </div>
+          <div class="section-header"><h2>Asignaciones Docentes</h2>
+            <button class="btn btn-primary" onclick="M.assignment.create()">+ Nueva asignación</button></div>
           <div class="tbl-toolbar">
             <input class="tbl-search" placeholder="Buscar…" oninput="filterTable('tbl-assignments',this.value)">
           </div>
@@ -551,13 +472,11 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
       </div>
 
-      <!-- ─── ALUMNOS ────────────────────────────────────── -->
+      <!-- ALUMNOS -->
       <div id="v-students" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Alumnos</h2>
-            <button class="btn btn-primary" onclick="M.student.create()">+ Nuevo alumno</button>
-          </div>
+          <div class="section-header"><h2>Alumnos</h2>
+            <button class="btn btn-primary" onclick="M.student.create()">+ Nuevo alumno</button></div>
           <div class="tbl-toolbar">
             <input class="tbl-search" placeholder="Buscar alumno…" oninput="filterTable('tbl-students',this.value)">
           </div>
@@ -565,56 +484,43 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
       </div>
 
-      <!-- ─── INSCRIPCIONES ─────────────────────────────── -->
+      <!-- INSCRIPCIONES -->
       <div id="v-enrollments" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Inscripciones</h2>
-            <button class="btn btn-primary" onclick="M.enrollment.create()">+ Inscribir alumno</button>
-          </div>
+          <div class="section-header"><h2>Inscripciones</h2>
+            <button class="btn btn-primary" onclick="M.enrollment.create()">+ Inscribir alumno</button></div>
           <div class="tbl-wrap"><div id="tbl-enrollments"></div></div>
         </div>
       </div>
 
-      <!-- ─── PLANEACIÓN ────────────────────────────────── -->
+      <!-- PLANEACIÓN -->
       <div id="v-planning" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Planeaciones</h2>
-            <button class="btn btn-primary" onclick="M.planning.create()">+ Nueva planeación</button>
-          </div>
+          <div class="section-header"><h2>Planeaciones</h2>
+            <button class="btn btn-primary" onclick="M.planning.create()">+ Nueva planeación</button></div>
           <div class="tbl-wrap"><div id="tbl-planning"></div></div>
         </div>
       </div>
 
-      <!-- ─── CLASES ─────────────────────────────────────── -->
+      <!-- CLASES -->
       <div id="v-sessions" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Sesiones de Clase</h2>
-            <button class="btn btn-primary" onclick="M.session.create()">+ Nueva sesión</button>
-          </div>
+          <div class="section-header"><h2>Sesiones de Clase</h2>
+            <button class="btn btn-primary" onclick="M.session.create()">+ Nueva sesión</button></div>
           <div class="tbl-wrap"><div id="tbl-sessions"></div></div>
         </div>
       </div>
 
-      <!-- ─── ASISTENCIA ────────────────────────────────── -->
+      <!-- ASISTENCIA -->
       <div id="v-attendance" class="view">
         <div class="section-card">
           <h2 style="margin-bottom:16px">Registro de Asistencia</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
-            <div class="field">
-              <label>Sesión de clase</label>
-              <select id="att-session" onchange="loadAttStudents()"><option value="">— Seleccionar —</option></select>
-            </div>
-            <div class="field">
-              <label>Fecha</label>
-              <input id="att-date" type="date" value="">
-            </div>
-            <div class="field">
-              <label>Periodo</label>
-              <select id="att-period"><option value="">— Seleccionar —</option></select>
-            </div>
+            <div class="field"><label>Sesión</label>
+              <select id="att-session" onchange="loadAttStudents()"><option value="">— Seleccionar —</option></select></div>
+            <div class="field"><label>Fecha</label><input id="att-date" type="date"></div>
+            <div class="field"><label>Periodo</label>
+              <select id="att-period"><option value="">— Seleccionar —</option></select></div>
           </div>
           <div id="att-list-wrap"></div>
           <div id="att-actions" style="display:none;margin-top:16px" class="flex gap">
@@ -629,40 +535,33 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
       </div>
 
-      <!-- ─── ACTIVIDADES ───────────────────────────────── -->
+      <!-- ACTIVIDADES -->
       <div id="v-activities" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Actividades y Tareas</h2>
-            <button class="btn btn-primary" onclick="M.activity.create()">+ Nueva actividad</button>
-          </div>
+          <div class="section-header"><h2>Actividades y Tareas</h2>
+            <button class="btn btn-primary" onclick="M.activity.create()">+ Nueva actividad</button></div>
           <div class="tbl-wrap"><div id="tbl-activities"></div></div>
         </div>
       </div>
 
-      <!-- ─── EVALUACIONES ──────────────────────────────── -->
+      <!-- EVALUACIONES -->
       <div id="v-evaluations" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Evaluaciones</h2>
-            <button class="btn btn-primary" onclick="M.evaluation.create()">+ Nueva evaluación</button>
-          </div>
+          <div class="section-header"><h2>Evaluaciones</h2>
+            <button class="btn btn-primary" onclick="M.evaluation.create()">+ Nueva evaluación</button></div>
           <div class="tbl-wrap"><div id="tbl-evaluations"></div></div>
         </div>
       </div>
 
-      <!-- ─── SEGUIMIENTO ───────────────────────────────── -->
+      <!-- SEGUIMIENTO -->
       <div id="v-tracking" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Seguimiento de Alumnos</h2>
-            <button class="btn btn-primary" onclick="M.observation.create()">+ Nueva observación</button>
-          </div>
+          <div class="section-header"><h2>Seguimiento de Alumnos</h2>
+            <button class="btn btn-primary" onclick="M.observation.create()">+ Nueva observación</button></div>
           <div style="display:flex;gap:12px;margin-bottom:16px">
             <select id="track-student" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:var(--r)" onchange="loadTracking()">
               <option value="">— Seleccionar alumno —</option>
             </select>
-            <button class="btn btn-secondary" onclick="loadTracking()">Ver historial</button>
           </div>
           <div id="track-timeline"></div>
         </div>
@@ -672,25 +571,22 @@ input[type=radio]{accent-color:var(--blue)}
         </div>
       </div>
 
-      <!-- ─── COMUNICACIÓN ──────────────────────────────── -->
+      <!-- COMUNICACIÓN -->
       <div id="v-announcements" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Anuncios</h2>
-            <button class="btn btn-primary" onclick="M.announcement.create()">+ Nuevo anuncio</button>
-          </div>
+          <div class="section-header"><h2>Anuncios</h2>
+            <button class="btn btn-primary" onclick="M.announcement.create()">+ Nuevo anuncio</button></div>
           <div id="ann-list"></div>
         </div>
       </div>
 
-      <!-- ─── REPORTES ──────────────────────────────────── -->
+      <!-- REPORTES -->
       <div id="v-reports" class="view">
         <div class="tabs">
           <button class="tab active" onclick="switchTab('rpt','att')">Asistencia</button>
           <button class="tab" onclick="switchTab('rpt','grades')">Calificaciones</button>
           <button class="tab" onclick="switchTab('rpt','load')">Carga Docente</button>
         </div>
-
         <div id="rpt-att">
           <div class="section-card">
             <h3 style="margin-bottom:14px">Reporte de Asistencia por Grupo</h3>
@@ -706,7 +602,6 @@ input[type=radio]{accent-color:var(--blue)}
             <div id="rpt-att-result"></div>
           </div>
         </div>
-
         <div id="rpt-grades" style="display:none">
           <div class="section-card">
             <h3 style="margin-bottom:14px">Reporte de Calificaciones</h3>
@@ -720,35 +615,30 @@ input[type=radio]{accent-color:var(--blue)}
             <div id="rpt-grades-result"></div>
           </div>
         </div>
-
         <div id="rpt-load" style="display:none">
           <div class="section-card">
-            <div class="section-header">
-              <h3>Carga Docente</h3>
-              <button class="btn btn-primary" onclick="runReport('load')">Generar</button>
-            </div>
+            <div class="section-header"><h3>Carga Docente</h3>
+              <button class="btn btn-primary" onclick="runReport('load')">Generar</button></div>
             <div id="rpt-load-result"></div>
           </div>
         </div>
       </div>
 
-      <!-- ─── USUARIOS ──────────────────────────────────── -->
+      <!-- USUARIOS -->
       <div id="v-users" class="view">
         <div class="section-card">
-          <div class="section-header">
-            <h2>Gestión de Usuarios</h2>
-            <button class="btn btn-primary" onclick="M.user.create()">+ Nuevo usuario</button>
-          </div>
+          <div class="section-header"><h2>Gestión de Usuarios</h2>
+            <button class="btn btn-primary" onclick="M.user.create()">+ Nuevo usuario</button></div>
           <div class="tbl-wrap"><div id="tbl-users"></div></div>
         </div>
       </div>
 
-      <!-- ─── AUDITORÍA ─────────────────────────────────── -->
+      <!-- AUDITORÍA -->
       <div id="v-audit" class="view">
         <div class="section-card">
           <div class="section-header"><h2>Bitácora de Auditoría</h2></div>
           <div class="tbl-toolbar">
-            <input class="tbl-search" placeholder="Buscar en auditoría…" oninput="filterTable('tbl-audit',this.value)">
+            <input class="tbl-search" placeholder="Buscar…" oninput="filterTable('tbl-audit',this.value)">
           </div>
           <div class="tbl-wrap"><div id="tbl-audit"></div></div>
         </div>
@@ -758,49 +648,188 @@ input[type=radio]{accent-color:var(--blue)}
   </div><!-- #main -->
 </div><!-- #app -->
 
-<!-- ═══════════════ MODAL ═══════════════ -->
+<!-- MODAL -->
 <div id="modal-overlay">
   <div id="modal-box">
     <div class="modal-head">
       <h3 id="modal-title">—</h3>
-      <button onclick="closeModal()" style="background:none;color:var(--muted);font-size:20px;line-height:1">×</button>
+      <button onclick="closeModal()" style="background:none;color:var(--muted);font-size:22px;line-height:1">×</button>
     </div>
     <div class="modal-body" id="modal-body"></div>
-    <div class="modal-foot" id="modal-foot">
+    <div class="modal-foot">
       <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-primary" id="modal-ok" onclick="submitModal()">Guardar</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ TOASTS ═══════════════ -->
 <div id="toasts"></div>
 
-<!-- ═══════════════════════════════════════════════════════
-     JAVASCRIPT
-═══════════════════════════════════════════════════════ -->
 <script>
 'use strict';
 
-/* ── URL DEL BACKEND — edita solo esta línea ─────────── */
-const API_URL = 'https://script.google.com/macros/s/AKfycbz-PYPpJdi0ZoK_u_Mf9sxLwYGQ2UiEYJ26LHEGrIHPA3tSqFHWVZ_5eZgASGLI2vqH6A/exec';
+/* ── URL DEL BACKEND ─────────────────────────────────── */
+const API_URL = 'https://script.google.com/macros/s/TU_URL_AQUI/exec';
 
 /* ── ESTADO ──────────────────────────────────────────── */
 const State = {
-  apiUrl: API_URL,
-  token:  localStorage.getItem('token')  || '',
-  user:   JSON.parse(localStorage.getItem('user') || 'null'),
-  view:   'dashboard',
-  modalCb: null,
-  // Caché de datos
+  apiUrl:   API_URL,
+  token:    localStorage.getItem('token')  || '',
+  user:     JSON.parse(localStorage.getItem('user') || 'null'),
+  view:     'dashboard',
+  demo:     false,
+  modalCb:  null,
   teachers: [], subjects: [], groups: [], students: [],
-  periods: [], sessions: [], assignments: [], evaluations: [],
+  periods:  [], sessions: [], assignments: [], evaluations: [],
 };
+
+/* ── DATOS DEMO ──────────────────────────────────────── */
+const DEMO = {
+  teachers: [
+    {id:'t1',employee_number:'EMP-001',name:'Mtra. Laura Méndez',email:'lmendez@escuela.edu',phone:'614-111-2233',speciality:'Matemáticas',status:'active'},
+    {id:'t2',employee_number:'EMP-002',name:'Prof. Carlos Ríos',email:'crios@escuela.edu',phone:'614-444-5566',speciality:'Español',status:'active'},
+    {id:'t3',employee_number:'EMP-003',name:'Mtra. Ana Flores',email:'aflores@escuela.edu',phone:'614-777-8899',speciality:'Ciencias',status:'active'},
+    {id:'t4',employee_number:'EMP-004',name:'Prof. Jorge Vargas',email:'jvargas@escuela.edu',phone:'614-000-1122',speciality:'Historia',status:'active'},
+  ],
+  subjects: [
+    {id:'s1',name:'Matemáticas',short_name:'MAT',code:'M-301',credits:8,hours_per_week:5,status:'active'},
+    {id:'s2',name:'Español',short_name:'ESP',code:'E-301',credits:6,hours_per_week:4,status:'active'},
+    {id:'s3',name:'Ciencias Naturales',short_name:'CIEN',code:'C-301',credits:6,hours_per_week:4,status:'active'},
+    {id:'s4',name:'Historia',short_name:'HIST',code:'H-301',credits:5,hours_per_week:3,status:'active'},
+    {id:'s5',name:'Educación Física',short_name:'EDF',code:'EF-301',credits:4,hours_per_week:2,status:'active'},
+  ],
+  groups: [
+    {id:'g1',name:'3°A',grade:'3°',shift:'Matutino',room:'Aula 12',capacity:35,status:'active'},
+    {id:'g2',name:'3°B',grade:'3°',shift:'Matutino',room:'Aula 13',capacity:35,status:'active'},
+    {id:'g3',name:'2°A',grade:'2°',shift:'Matutino',room:'Aula 08',capacity:30,status:'active'},
+    {id:'g4',name:'1°A',grade:'1°',shift:'Vespertino',room:'Aula 05',capacity:32,status:'active'},
+  ],
+  students: [
+    {id:'a1',enrollment_number:'2024-001',name:'Sofía Ramírez López',email:'sofia@mail.com',phone:'614-555-0011',parent_name:'Rosa López',status:'active'},
+    {id:'a2',enrollment_number:'2024-002',name:'Diego Torres Muñoz',email:'diego@mail.com',phone:'614-555-0022',parent_name:'Pedro Torres',status:'active'},
+    {id:'a3',enrollment_number:'2024-003',name:'Valentina Cruz Soto',email:'vale@mail.com',phone:'614-555-0033',parent_name:'Carla Soto',status:'active'},
+    {id:'a4',enrollment_number:'2024-004',name:'Emilio Gómez Ruiz',email:'emilio@mail.com',phone:'614-555-0044',parent_name:'Luis Gómez',status:'active'},
+    {id:'a5',enrollment_number:'2024-005',name:'Isabella Moreno Díaz',email:'isa@mail.com',phone:'614-555-0055',parent_name:'Ana Díaz',status:'active'},
+    {id:'a6',enrollment_number:'2024-006',name:'Mateo Herrera Vega',email:'mateo@mail.com',phone:'614-555-0066',parent_name:'Gloria Vega',status:'active'},
+    {id:'a7',enrollment_number:'2024-007',name:'Camila Ortiz Reyes',email:'cami@mail.com',phone:'614-555-0077',parent_name:'Javier Reyes',status:'active'},
+    {id:'a8',enrollment_number:'2024-008',name:'Sebastián Luna Parra',email:'seba@mail.com',phone:'614-555-0088',parent_name:'Martha Parra',status:'active'},
+  ],
+  periods: [
+    {id:'p1',name:'Bimestre 1 — 2024-2025',type:'bimester',start_date:'2024-08-26',end_date:'2024-10-18',status:'closed'},
+    {id:'p2',name:'Bimestre 2 — 2024-2025',type:'bimester',start_date:'2024-10-21',end_date:'2024-12-20',status:'active'},
+    {id:'p3',name:'Bimestre 3 — 2024-2025',type:'bimester',start_date:'2025-01-13',end_date:'2025-03-14',status:'pending'},
+  ],
+  assignments: [
+    {id:'as1',teacher_id:'t1',subject_id:'s1',group_id:'g1',period_id:'p2',schedule:'Lun-Mié-Vie 08:00-09:00',room:'Aula 12',status:'active'},
+    {id:'as2',teacher_id:'t2',subject_id:'s2',group_id:'g1',period_id:'p2',schedule:'Mar-Jue 08:00-09:30',room:'Aula 12',status:'active'},
+    {id:'as3',teacher_id:'t3',subject_id:'s3',group_id:'g2',period_id:'p2',schedule:'Lun-Mié 10:00-11:30',room:'Lab Ciencias',status:'active'},
+    {id:'as4',teacher_id:'t4',subject_id:'s4',group_id:'g3',period_id:'p2',schedule:'Mar-Jue 09:00-10:00',room:'Aula 08',status:'active'},
+  ],
+  sessions: [
+    {id:'ss1',assignment_id:'as1',date:'2024-11-25',start_time:'08:00',end_time:'09:00',room:'Aula 12',summary:'Fracciones equivalentes y simplificación',status:'closed'},
+    {id:'ss2',assignment_id:'as2',date:'2024-11-26',start_time:'08:00',end_time:'09:30',room:'Aula 12',summary:'Análisis de texto narrativo',status:'closed'},
+    {id:'ss3',assignment_id:'as1',date:'2024-11-27',start_time:'08:00',end_time:'09:00',room:'Aula 12',summary:'Operaciones con decimales',status:'open'},
+    {id:'ss4',assignment_id:'as3',date:'2024-11-27',start_time:'10:00',end_time:'11:30',room:'Lab Ciencias',summary:'Ecosistemas y cadenas alimentarias',status:'open'},
+  ],
+  attendance: [
+    {id:'at1',session_id:'ss1',student_id:'a1',date:'2024-11-25',status:'present',notes:''},
+    {id:'at2',session_id:'ss1',student_id:'a2',date:'2024-11-25',status:'present',notes:''},
+    {id:'at3',session_id:'ss1',student_id:'a3',date:'2024-11-25',status:'absent',notes:'Enfermedad'},
+    {id:'at4',session_id:'ss1',student_id:'a4',date:'2024-11-25',status:'late',notes:''},
+    {id:'at5',session_id:'ss2',student_id:'a1',date:'2024-11-26',status:'present',notes:''},
+    {id:'at6',session_id:'ss2',student_id:'a2',date:'2024-11-26',status:'justified',notes:'Cita médica'},
+  ],
+  activities: [
+    {id:'ac1',assignment_id:'as1',title:'Tarea: Fracciones cap. 5',type:'homework',due_date:'2024-11-28',max_score:10,status:'active'},
+    {id:'ac2',assignment_id:'as1',title:'Proyecto: Maqueta geométrica',type:'project',due_date:'2024-12-10',max_score:50,status:'active'},
+    {id:'ac3',assignment_id:'as2',title:'Análisis cuento "El Aleph"',type:'classwork',due_date:'2024-11-29',max_score:20,status:'active'},
+    {id:'ac4',assignment_id:'as3',title:'Reporte de ecosistema local',type:'project',due_date:'2024-12-06',max_score:30,status:'active'},
+  ],
+  evaluations: [
+    {id:'ev1',assignment_id:'as1',title:'Examen Bim. 2 — Matemáticas',type:'exam',date:'2024-12-16',max_score:100,weight:40,status:'active'},
+    {id:'ev2',assignment_id:'as2',title:'Examen Bim. 2 — Español',type:'exam',date:'2024-12-17',max_score:100,weight:40,status:'active'},
+    {id:'ev3',assignment_id:'as3',title:'Práctica de laboratorio',type:'practical',date:'2024-12-05',max_score:100,weight:20,status:'active'},
+  ],
+  evalResults: [
+    {id:'er1',evaluation_id:'ev1',student_id:'a1',score:92,max_score:100,feedback:'Excelente manejo de fracciones'},
+    {id:'er2',evaluation_id:'ev1',student_id:'a2',score:78,max_score:100,feedback:'Mejorar operaciones con negativos'},
+    {id:'er3',evaluation_id:'ev1',student_id:'a3',score:85,max_score:100,feedback:'Buen desempeño'},
+    {id:'er4',evaluation_id:'ev1',student_id:'a4',score:61,max_score:100,feedback:'Necesita reforzar decimales'},
+    {id:'er5',evaluation_id:'ev1',student_id:'a5',score:95,max_score:100,feedback:'Sobresaliente'},
+    {id:'er6',evaluation_id:'ev1',student_id:'a6',score:70,max_score:100,feedback:'Regular'},
+    {id:'er7',evaluation_id:'ev1',student_id:'a7',score:88,max_score:100,feedback:'Muy bien'},
+    {id:'er8',evaluation_id:'ev1',student_id:'a8',score:55,max_score:100,feedback:'Repaso urgente'},
+  ],
+  institutions: [
+    {id:'i1',name:'Escuela Secundaria Técnica No. 45',short_name:'EST-45',address:'Av. Juárez 1234, Chihuahua',phone:'614-123-4567',email:'est45@sep.gob.mx',status:'active'},
+  ],
+  years: [
+    {id:'y1',name:'Ciclo 2024-2025',start_date:'2024-08-26',end_date:'2025-07-11',status:'active'},
+    {id:'y2',name:'Ciclo 2023-2024',start_date:'2023-08-28',end_date:'2024-07-12',status:'closed'},
+  ],
+  departments: [
+    {id:'d1',name:'Ciencias Exactas',status:'active'},
+    {id:'d2',name:'Humanidades',status:'active'},
+    {id:'d3',name:'Ciencias Naturales',status:'active'},
+  ],
+  enrollments: [
+    {id:'en1',student_id:'a1',group_id:'g1',period_id:'p2',enrollment_date:'2024-08-26',status:'active'},
+    {id:'en2',student_id:'a2',group_id:'g1',period_id:'p2',enrollment_date:'2024-08-26',status:'active'},
+    {id:'en3',student_id:'a3',group_id:'g1',period_id:'p2',enrollment_date:'2024-08-26',status:'active'},
+    {id:'en4',student_id:'a4',group_id:'g2',period_id:'p2',enrollment_date:'2024-08-26',status:'active'},
+    {id:'en5',student_id:'a5',group_id:'g2',period_id:'p2',enrollment_date:'2024-08-26',status:'active'},
+  ],
+  planning: [
+    {id:'pl1',assignment_id:'as1',title:'Planeación Bim. 2 Matemáticas 3°A',version:'v1.2',objectives:'Dominar operaciones con fracciones y decimales',status:'active'},
+    {id:'pl2',assignment_id:'as2',title:'Planeación Bim. 2 Español 3°A',version:'v1.0',objectives:'Análisis de textos narrativos y descriptivos',status:'active'},
+  ],
+  observations: [
+    {id:'ob1',student_id:'a4',type:'academic',content:'Presenta dificultades con operaciones básicas. Se recomienda atención personalizada.',visibility:'coordinators',created_at:'2024-11-20T10:30:00Z'},
+    {id:'ob2',student_id:'a1',type:'recognition',content:'Desempeño sobresaliente en el proyecto de geometría. Alumna ejemplo del grupo.',visibility:'all',created_at:'2024-11-22T14:00:00Z'},
+    {id:'ob3',student_id:'a8',type:'behavioral',content:'Requiere seguimiento de asistencia. Tres faltas injustificadas este bimestre.',visibility:'coordinators',created_at:'2024-11-23T09:15:00Z'},
+  ],
+  announcements: [
+    {id:'an1',title:'Exámenes Bimestrales — Diciembre 2024',content:'Los exámenes del segundo bimestre se llevarán a cabo del 16 al 20 de diciembre. Se solicita a los docentes entregar rúbricas antes del 13 de diciembre.',target_type:'all',created_at:'2024-11-25T08:00:00Z'},
+    {id:'an2',title:'Entrega de boletas — 10 enero 2025',content:'La entrega de boletas del segundo bimestre será el viernes 10 de enero de 2025 en horario de 8:00 a 14:00 hrs.',target_type:'all',created_at:'2024-11-24T10:00:00Z'},
+    {id:'an3',title:'Capacitación docente — Sábado 7 dic',content:'Se convoca a todos los docentes a la capacitación de evaluación formativa el sábado 7 de diciembre de 9:00 a 13:00 hrs en la sala de usos múltiples.',target_type:'teachers',created_at:'2024-11-23T11:00:00Z'},
+  ],
+  users: [
+    {id:'u1',name:'Administrador',username:'admin',role:'admin',status:'active'},
+    {id:'u2',name:'Mtra. Laura Méndez',username:'lmendez',role:'teacher',status:'active'},
+    {id:'u3',name:'Prof. Carlos Ríos',username:'crios',role:'teacher',status:'active'},
+    {id:'u4',name:'Lic. Patricia Salas',username:'psalas',role:'coordinator',status:'active'},
+  ],
+  audit: [
+    {id:'au1',timestamp:'2024-11-25T08:15:00Z',action:'login',entity:'User',user_id:'admin'},
+    {id:'au2',timestamp:'2024-11-25T08:20:00Z',action:'create',entity:'ClassSessions',entity_id:'ss3',user_id:'lmendez'},
+    {id:'au3',timestamp:'2024-11-25T09:45:00Z',action:'save_attendance',entity:'Attendance',entity_id:'ss1',user_id:'lmendez'},
+    {id:'au4',timestamp:'2024-11-25T10:00:00Z',action:'update',entity:'Activities',entity_id:'ac1',user_id:'crios'},
+    {id:'au5',timestamp:'2024-11-25T11:30:00Z',action:'login',entity:'User',user_id:'psalas'},
+  ],
+};
+
+/* ── MODO DEMO ───────────────────────────────────────── */
+function loadDemo() {
+  State.demo = true;
+  State.user = { id:'u1', name:'Administrador', username:'admin', role:'admin' };
+  State.teachers    = DEMO.teachers;
+  State.subjects    = DEMO.subjects;
+  State.groups      = DEMO.groups;
+  State.students    = DEMO.students;
+  State.periods     = DEMO.periods;
+  State.sessions    = DEMO.sessions;
+  State.assignments = DEMO.assignments;
+  State.evaluations = DEMO.evaluations;
+  document.getElementById('demo-ribbon').style.display = '';
+  initApp();
+  toast('Modo demo activo — los datos no se guardan', 'warn');
+}
 
 /* ── API ─────────────────────────────────────────────── */
 async function api(action, data = {}) {
+  if (State.demo) return demoApi(action, data);
   if (!State.apiUrl || State.apiUrl.includes('TU_URL_AQUI')) {
-    toast('Define API_URL en el archivo index.html antes de usar el sistema', 'err');
+    toast('Define API_URL en index.html antes de usar el sistema real', 'err');
     return null;
   }
   try {
@@ -809,7 +838,7 @@ async function api(action, data = {}) {
       body: JSON.stringify({ action, token: State.token, data }),
     });
     const j = await res.json();
-    if (!j.ok) { toast(j.error || 'Error desconocido', 'err'); return null; }
+    if (!j.ok) { toast(j.error || 'Error', 'err'); return null; }
     return j;
   } catch (_) {
     try {
@@ -819,16 +848,84 @@ async function api(action, data = {}) {
       const j = await res.json();
       if (!j.ok) { toast(j.error || 'Error', 'err'); return null; }
       return j;
-    } catch (e) {
-      toast('Error de conexión: ' + e.message, 'err'); return null;
-    }
+    } catch (e) { toast('Error de conexión: ' + e.message, 'err'); return null; }
   }
+}
+
+/* ── DEMO API ────────────────────────────────────────── */
+function demoApi(action, data) {
+  const rows = (arr) => ({ ok:true, rows: arr, total: arr.length });
+  const maps = {
+    'get_teachers': () => rows(DEMO.teachers),
+    'get_subjects': () => rows(DEMO.subjects),
+    'get_groups':   () => rows(DEMO.groups),
+    'get_students': () => rows(DEMO.students),
+    'get_periods':  () => rows(DEMO.periods),
+    'get_sessions': () => rows(DEMO.sessions),
+    'get_assignments': () => rows(DEMO.assignments),
+    'get_evaluations': () => rows(DEMO.evaluations),
+    'get_institutions': () => rows(DEMO.institutions),
+    'get_years':     () => rows(DEMO.years),
+    'get_departments':() => rows(DEMO.departments),
+    'get_enrollments':() => rows(DEMO.enrollments),
+    'get_planning':  () => rows(DEMO.planning),
+    'get_activities':() => rows(DEMO.activities),
+    'get_attendance':() => rows(DEMO.attendance),
+    'get_observations':() => rows(DEMO.observations),
+    'get_announcements':() => rows(DEMO.announcements),
+    'get_users':     () => rows(DEMO.users),
+    'get_audit_log': () => rows(DEMO.audit),
+    'get_results':   () => rows(DEMO.evalResults),
+    'get_followups': () => rows([]),
+    'get_units':     () => rows([]),
+    'get_topics':    () => rows([]),
+    'get_submissions':()=> rows([]),
+    'get_final_grades':()=>rows([]),
+    'dashboard': () => ({
+      ok:true,
+      stats:{ students:8, teachers:4, groups:4, subjects:5, sessions:4, activities:4 },
+      att:{ present:7, absent:1, late:2, justified:1 },
+      recentSessions: DEMO.sessions.slice(-3),
+    }),
+    'report_attendance': () => ({ ok:true, report: DEMO.students.map((s,i)=>({
+      student_id:s.id, name:s.name, enrollment:s.enrollment_number,
+      present:15+i, absent:i%3, late:i%2, justified:i%2,
+      total:18, pct:Math.round((15+i)/18*100),
+    }))}),
+    'report_grades': () => ({ ok:true, report: DEMO.evalResults.map(r=>{
+      const s = DEMO.students.find(x=>x.id===r.student_id)||{};
+      return { student_id:r.student_id, name:s.name, enrollment:s.enrollment_number,
+               grades:[r], average:Number(r.score) };
+    })}),
+    'report_teacher_load': () => ({ ok:true, report: DEMO.teachers.map(t=>({
+      teacher_id:t.id, name:t.name, employee_number:t.employee_number,
+      assignments: DEMO.assignments.filter(a=>a.teacher_id===t.id).map(a=>({
+        subject: DEMO.subjects.find(s=>s.id===a.subject_id)?.name||'',
+        group: DEMO.groups.find(g=>g.id===a.group_id)?.name||'',
+        schedule:a.schedule,
+      })),
+      count: DEMO.assignments.filter(a=>a.teacher_id===t.id).length,
+    }))}),
+    'student_timeline': () => ({ ok:true, timeline: DEMO.observations
+      .filter(o=>o.student_id===data.id)
+      .map(o=>({type:'observation',date:o.created_at,data:o})) }),
+  };
+  const fn = maps[action];
+  if (fn) return Promise.resolve(fn());
+  // Simular create/update/delete
+  if (action.startsWith('create_')||action.startsWith('update_')||
+      action.startsWith('delete_')||action.startsWith('save_')||
+      action.startsWith('bulk_')||action==='close_period'||action==='close_session') {
+    toast('Demo: acción simulada (no se guarda)', 'info');
+    return Promise.resolve({ ok:true, row:{id:'demo-'+Date.now(),...data}, count:1 });
+  }
+  return Promise.resolve({ ok:true, rows:[], total:0 });
 }
 
 /* ── AUTH ────────────────────────────────────────────── */
 async function doLogin() {
   const username = document.getElementById('inp-user').value.trim();
-  const password = document.getElementById('inp-pass').value;
+  const password = document.getElementById('inp-pass').value.trim();
   if (!username || !password) { toast('Ingresa usuario y contraseña', 'warn'); return; }
   const r = await api('login', { username, password });
   if (!r) return;
@@ -840,30 +937,28 @@ async function doLogin() {
 }
 
 async function doLogout() {
-  await api('logout', {});
-  State.token = ''; State.user = null;
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  if (!State.demo) await api('logout', {});
+  State.token = ''; State.user = null; State.demo = false;
+  localStorage.removeItem('token'); localStorage.removeItem('user');
   document.getElementById('app').style.display        = 'none';
   document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('demo-ribbon').style.display = 'none';
 }
-
-
 
 /* ── INIT ────────────────────────────────────────────── */
 function initApp() {
   document.getElementById('login-page').style.display = 'none';
-  document.getElementById('app').style.display = '';
-  document.getElementById('sb-username').textContent = State.user.name;
-  document.getElementById('sb-role').textContent     = State.user.role;
-  document.getElementById('tb-user').textContent     = State.user.name;
-  if (State.user.role !== 'admin') document.getElementById('nav-users').style.display = 'none';
-  preloadData();
-  nav('dashboard');
+  document.getElementById('app').style.display        = 'block';
+  document.getElementById('sb-username').textContent  = State.user.name;
+  document.getElementById('sb-role').textContent      = State.user.role;
+  document.getElementById('tb-user').textContent      = State.user.name;
+  if (State.user.role !== 'admin')
+    document.getElementById('nav-users').style.display = 'none';
+  preloadData().then(() => nav('dashboard'));
 }
 
 async function preloadData() {
-  const [ts, ss, gs, st, ps, es] = await Promise.all([
+  const [ts,ss,gs,st,ps,es] = await Promise.all([
     api('get_teachers'), api('get_subjects'), api('get_groups'),
     api('get_students'), api('get_periods'), api('get_evaluations'),
   ]);
@@ -873,27 +968,28 @@ async function preloadData() {
   if (st) State.students    = st.rows || [];
   if (ps) State.periods     = ps.rows || [];
   if (es) State.evaluations = es.rows || [];
+  const asn = await api('get_assignments');
+  if (asn) State.assignments = asn.rows || [];
   populateSelects();
 }
 
 function populateSelects() {
-  // Asistencia
-  fillSelect('att-period', State.periods, 'id', 'name', '— Periodo —');
-  fillSelect('rpt-att-period', State.periods, 'id', 'name', 'Todos');
-  fillSelect('rpt-att-group',  State.groups,   'id', 'name', 'Todos');
-  fillSelect('rpt-grades-eval', State.evaluations, 'id', 'title', 'Todas');
-  fillSelect('track-student', State.students, 'id', 'name', '— Seleccionar alumno —');
+  fillSelect('att-period',    State.periods,  'id','name','— Periodo —');
+  fillSelect('rpt-att-period',State.periods,  'id','name','Todos');
+  fillSelect('rpt-att-group', State.groups,   'id','name','Todos');
+  fillSelect('rpt-grades-eval',State.evaluations,'id','title','Todas');
+  fillSelect('track-student', State.students, 'id','name','— Seleccionar alumno —');
 }
 
 /* ── ROUTER ──────────────────────────────────────────── */
-const VIEW_TITLES = {
-  dashboard:'Dashboard', institution:'Instituciones', calendar:'Ciclos y Periodos',
-  groups:'Grupos', departments:'Departamentos', subjects:'Materias',
-  teachers:'Docentes', assignments:'Asignaciones', students:'Alumnos',
-  enrollments:'Inscripciones', planning:'Planeación', sessions:'Sesiones de Clase',
-  attendance:'Asistencia', activities:'Actividades', evaluations:'Evaluaciones',
-  tracking:'Seguimiento', announcements:'Comunicación', reports:'Reportes',
-  users:'Usuarios', audit:'Auditoría',
+const TITLES = {
+  dashboard:'Dashboard',institution:'Instituciones',calendar:'Ciclos y Periodos',
+  groups:'Grupos',departments:'Departamentos',subjects:'Materias',
+  teachers:'Docentes',assignments:'Asignaciones',students:'Alumnos',
+  enrollments:'Inscripciones',planning:'Planeación',sessions:'Sesiones de Clase',
+  attendance:'Asistencia',activities:'Actividades',evaluations:'Evaluaciones',
+  tracking:'Seguimiento',announcements:'Comunicación',reports:'Reportes',
+  users:'Usuarios',audit:'Auditoría',
 };
 
 function nav(view) {
@@ -904,7 +1000,7 @@ function nav(view) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const btn = document.querySelector(`[data-view="${view}"]`);
   if (btn) btn.classList.add('active');
-  document.getElementById('topbar-title').textContent = VIEW_TITLES[view] || view;
+  document.getElementById('topbar-title').textContent = TITLES[view] || view;
   State.view = view;
   loadView(view);
 }
@@ -928,7 +1024,7 @@ async function loadView(v) {
     case 'evaluations':   return M.evaluation.load();
     case 'tracking':      return loadTracking();
     case 'announcements': return loadAnnouncements();
-    case 'reports':       return; // loaded on demand
+    case 'reports':       return;
     case 'users':         return M.user.load();
     case 'audit':         return loadAudit();
   }
@@ -948,50 +1044,38 @@ function toast(msg, type = 'info') {
 function openModal(title, bodyHtml, onOk, okLabel = 'Guardar') {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-body').innerHTML    = bodyHtml;
-  document.getElementById('modal-ok').textContent    = okLabel;
+  document.getElementById('modal-ok').textContent   = okLabel;
   document.getElementById('modal-overlay').classList.add('open');
   State.modalCb = onOk;
 }
-
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   State.modalCb = null;
 }
+function submitModal() { if (State.modalCb) State.modalCb(); }
+function formVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 
-function submitModal() {
-  if (State.modalCb) State.modalCb();
-}
-
-function formVal(id) {
-  const el = document.getElementById(id);
-  return el ? el.value : '';
-}
-
-/* ── GENERIC TABLE ───────────────────────────────────── */
-function renderTable(containerId, rows, cols, actions = [], counterId = null) {
+/* ── TABLE ───────────────────────────────────────────── */
+function renderTable(containerId, rows, cols, actions = []) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  if (!rows || !rows.length) {
-    el.innerHTML = '<p class="tbl-empty">Sin registros.</p>'; return;
-  }
-  if (counterId) {
-    const cnt = document.getElementById(counterId);
-    if (cnt) cnt.textContent = `${rows.length} registro(s)`;
-  }
+  if (!rows || !rows.length) { el.innerHTML = '<p class="tbl-empty">Sin registros.</p>'; return; }
   el.dataset.rows = JSON.stringify(rows);
-  const heads = cols.map(c => `<th>${c.label}</th>`).join('') + (actions.length ? '<th style="width:1px">Acciones</th>' : '');
+  el._cols = cols; el._acts = actions;
+  const heads = cols.map(c => `<th>${c.label}</th>`).join('') +
+    (actions.length ? '<th style="width:1px">Acciones</th>' : '');
   const trows = rows.map(r => {
     const cells = cols.map(c => {
-      let v = r[c.key] || '';
+      let v = r[c.key] !== undefined ? r[c.key] : '';
       if (c.badge)  v = badge(v);
       if (c.date)   v = fmtDate(v);
       if (c.format) v = c.format(r, v);
-      return `<td>${v}</td>`;
+      return `<td>${v !== '' ? v : '—'}</td>`;
     }).join('');
     const acts = actions.map(a =>
       `<button class="btn btn-sm ${a.cls||'btn-secondary'}" onclick="${a.fn}('${r.id}')">${a.label}</button>`
     ).join(' ');
-    return `<tr>${cells}${actions.length ? `<td class="flex gap" style="min-width:120px">${acts}</td>` : ''}</tr>`;
+    return `<tr>${cells}${actions.length ? `<td style="white-space:nowrap">${acts}</td>` : ''}</tr>`;
   }).join('');
   el.innerHTML = `<table><thead><tr>${heads}</tr></thead><tbody>${trows}</tbody></table>`;
 }
@@ -1002,27 +1086,28 @@ function filterTable(containerId, query) {
   const rows = JSON.parse(el.dataset.rows);
   const q = query.toLowerCase();
   const filtered = rows.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
-  const cols = el._cols; const acts = el._acts;
-  if (!cols) return;
-  renderTable(containerId, filtered, cols, acts);
+  renderTable(containerId, filtered, el._cols || [], el._acts || []);
 }
 
 function badge(val) {
   const v = (val || '').toLowerCase();
-  const cls = v === 'active' ? 'active' : v === 'deleted' ? 'deleted' : v === 'closed' ? 'closed'
-    : v === 'present' ? 'present' : v === 'absent' ? 'absent' : v === 'late' ? 'late'
-    : v === 'justified' ? 'justified' : v === 'graded' ? 'graded' : v === 'pending' ? 'pending'
-    : 'default';
-  const labels = { active:'Activo',deleted:'Eliminado',closed:'Cerrado',open:'Abierto',
+  const cls = {active:'active',deleted:'deleted',closed:'closed',open:'open',present:'present',
+    absent:'absent',late:'late',justified:'justified',graded:'graded',pending:'pending',
+    active:'active',inactive:'inactive',transferred:'transferred',
+    published:'active',draft:'pending'}[v] || 'default';
+  const labels = {active:'Activo',deleted:'Eliminado',closed:'Cerrado',open:'Abierto',
     present:'Presente',absent:'Ausente',late:'Retardo',justified:'Justificado',
     graded:'Calificado',pending:'Pendiente',inactive:'Inactivo',transferred:'Transferido',
-    published:'Publicado',draft:'Borrador' };
+    published:'Publicado',draft:'Borrador',bimester:'Bimestral',semester:'Semestral',
+    homework:'Tarea',project:'Proyecto',classwork:'Clase',quiz:'Quiz',exam:'Examen',
+    practical:'Práctica',academic:'Académica',behavioral:'Conductual',
+    recognition:'Reconocimiento',participation:'Participación'};
   return `<span class="badge badge-${cls}">${labels[v] || val}</span>`;
 }
 
 function fmtDate(v) {
   if (!v) return '—';
-  try { return new Date(v).toLocaleDateString('es-MX', {day:'2-digit',month:'short',year:'numeric'}); }
+  try { return new Date(v).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}); }
   catch(_) { return v; }
 }
 
@@ -1031,32 +1116,28 @@ function fillSelect(id, items, valKey, labelKey, placeholder = '— Seleccionar 
   if (!el) return;
   const cur = el.value;
   el.innerHTML = `<option value="">${placeholder}</option>` +
-    (items || []).map(i => `<option value="${i[valKey]}">${i[labelKey] || '—'}</option>`).join('');
+    (items||[]).map(i => `<option value="${i[valKey]}">${typeof labelKey==='function'?labelKey(i):i[labelKey]||'—'}</option>`).join('');
   if (cur) el.value = cur;
 }
 
 /* ── FORM BUILDER ────────────────────────────────────── */
-function buildForm(fields, initial = {}, gridCols = 2) {
+function buildForm(fields, initial = {}) {
   return `<div class="form-grid">${fields.map(f => {
     const v = initial[f.name] !== undefined ? initial[f.name] : (f.default || '');
     const req = f.required ? 'required' : '';
     let inp = '';
     if (f.type === 'select') {
-      const opts = (f.options || []).map(o =>
-        `<option value="${o.value}" ${v == o.value ? 'selected' : ''}>${o.label}</option>`
-      ).join('');
+      const opts = (f.options||[]).map(o =>
+        `<option value="${o.value}" ${String(v)===String(o.value)?'selected':''}>${o.label}</option>`).join('');
       inp = `<select id="f-${f.name}" ${req}><option value="">— Seleccionar —</option>${opts}</select>`;
     } else if (f.type === 'textarea') {
       inp = `<textarea id="f-${f.name}" rows="3" ${req}>${v}</textarea>`;
     } else {
-      inp = `<input id="f-${f.name}" type="${f.type||'text'}" value="${v}" placeholder="${f.placeholder||''}" ${req}>`;
+      inp = `<input id="f-${f.name}" type="${f.type||'text'}" value="${v.toString().replace(/"/g,'&quot;')}" placeholder="${f.placeholder||''}" ${req}>`;
     }
-    const cls = f.full ? 'field full' : 'field';
-    const hint = f.hint ? `<span class="hint">${f.hint}</span>` : '';
-    return `<div class="${cls}"><label>${f.label}${f.required?' *':''}</label>${inp}${hint}</div>`;
+    return `<div class="${f.full?'field full':'field'}"><label>${f.label}${f.required?' *':''}</label>${inp}</div>`;
   }).join('')}</div>`;
 }
-
 function formData(fields) {
   const d = {};
   fields.forEach(f => { d[f.name] = formVal('f-' + f.name); });
@@ -1064,168 +1145,165 @@ function formData(fields) {
 }
 
 /* ── DASHBOARD ───────────────────────────────────────── */
-let attChart = null;
+let attChart = null, gradeChart = null;
 async function loadDashboard() {
   const r = await api('dashboard');
   if (!r) return;
-  const s = r.stats || {};
-  const a = r.att   || {};
+  const s = r.stats || {}, a = r.att || {};
   const cards = [
-    { val: s.students||0,   lbl: 'Alumnos',     cls: 'blue' },
-    { val: s.teachers||0,   lbl: 'Docentes',     cls: 'indigo' },
-    { val: s.groups||0,     lbl: 'Grupos',       cls: 'teal' },
-    { val: s.subjects||0,   lbl: 'Materias',     cls: '' },
-    { val: s.sessions||0,   lbl: 'Sesiones',     cls: 'green' },
-    { val: s.activities||0, lbl: 'Actividades',  cls: 'amber' },
+    {val:s.students||0,  lbl:'Alumnos',    cls:'c1'},
+    {val:s.teachers||0,  lbl:'Docentes',   cls:'c2'},
+    {val:s.groups||0,    lbl:'Grupos',     cls:'c3'},
+    {val:s.subjects||0,  lbl:'Materias',   cls:'c4'},
+    {val:s.sessions||0,  lbl:'Sesiones',   cls:'c5'},
+    {val:s.activities||0,lbl:'Actividades',cls:'c6'},
   ];
-  document.getElementById('dash-stats').innerHTML = cards.map(c =>
-    `<div class="stat-card ${c.cls}"><div class="val">${c.val}</div><div class="lbl">${c.lbl}</div></div>`
-  ).join('');
+  document.getElementById('dash-stats').innerHTML =
+    cards.map(c=>`<div class="stat-card ${c.cls}"><div class="val">${c.val}</div><div class="lbl">${c.lbl}</div></div>`).join('');
 
-  // Chart
-  const ctx = document.getElementById('chart-att').getContext('2d');
-  if (attChart) attChart.destroy();
-  attChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Presentes','Ausentes','Retardos','Justificados'],
-      datasets: [{ data: [a.present||0, a.absent||0, a.late||0, a.justified||0],
-        backgroundColor: ['#15803d','#b91c1c','#b45309','#1d4ed8'],
-        borderRadius: 4 }]
-    },
-    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-  });
+  try {
+    if (attChart) attChart.destroy();
+    attChart = new Chart(document.getElementById('chart-att').getContext('2d'), {
+      type:'bar',
+      data:{ labels:['Presentes','Ausentes','Retardos','Justificados'],
+        datasets:[{data:[a.present||0,a.absent||0,a.late||0,a.justified||0],
+          backgroundColor:['#15803d','#b91c1c','#b45309','#1d4ed8'],borderRadius:4}]},
+      options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+    });
+  } catch(_) { document.getElementById('chart-att').parentElement.innerHTML += '<p class="text-muted">Gráfica no disponible</p>'; }
 
-  // Recent sessions
+  try {
+    if (gradeChart) gradeChart.destroy();
+    const gcounts = [0,0,0,0,0];
+    (State.demo ? DEMO.evalResults : []).forEach(r => {
+      const p = Number(r.score);
+      if (p >= 90) gcounts[0]++; else if (p >= 80) gcounts[1]++;
+      else if (p >= 70) gcounts[2]++; else if (p >= 60) gcounts[3]++; else gcounts[4]++;
+    });
+    gradeChart = new Chart(document.getElementById('chart-grades').getContext('2d'), {
+      type:'doughnut',
+      data:{ labels:['90-100','80-89','70-79','60-69','<60'],
+        datasets:[{data: State.demo ? gcounts : [5,8,6,3,2],
+          backgroundColor:['#15803d','#2563eb','#7c3aed','#d97706','#b91c1c']}]},
+      options:{plugins:{legend:{position:'right'}}}
+    });
+  } catch(_) { document.getElementById('chart-grades').parentElement.innerHTML += '<p class="text-muted">Gráfica no disponible</p>'; }
+
   const sessions = r.recentSessions || [];
   document.getElementById('dash-sessions').innerHTML = sessions.length
-    ? sessions.map(s =>
-        `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
-          <div style="font-weight:500">${fmtDate(s.date)} — ${s.summary||'Sin resumen'}</div>
-          <div style="font-size:12px;color:var(--muted)">${badge(s.status)}</div>
-        </div>`).join('')
-    : '<p class="text-muted" style="padding:16px">Sin sesiones recientes</p>';
+    ? `<table><thead><tr><th>Fecha</th><th>Resumen</th><th>Estado</th></tr></thead><tbody>
+      ${sessions.map(s=>`<tr><td>${fmtDate(s.date)}</td><td>${s.summary||'—'}</td><td>${badge(s.status)}</td></tr>`).join('')}
+      </tbody></table>`
+    : '<p class="tbl-empty">Sin sesiones recientes.</p>';
 }
 
-/* ── INSTITUTION MODULE ──────────────────────────────── */
+/* ── CALENDAR ────────────────────────────────────────── */
 async function loadCalendar() {
   const [yr, pd] = await Promise.all([api('get_years'), api('get_periods')]);
   if (yr) renderTable('tbl-years', yr.rows,
     [{key:'name',label:'Ciclo'},{key:'start_date',label:'Inicio',date:true},
      {key:'end_date',label:'Fin',date:true},{key:'status',label:'Estado',badge:true}],
     [{label:'✏️',fn:'M.year.edit',cls:'btn-secondary'},{label:'🗑️',fn:'M.year.del',cls:'btn-danger btn-sm'}]);
-  if (pd) renderTable('tbl-periods', pd.rows,
-    [{key:'name',label:'Periodo'},{key:'type',label:'Tipo'},{key:'start_date',label:'Inicio',date:true},
-     {key:'end_date',label:'Fin',date:true},{key:'status',label:'Estado',badge:true}],
-    [{label:'✏️',fn:'M.period.edit',cls:'btn-secondary'},
-     {label:'🔒 Cerrar',fn:'M.period.close',cls:'btn-danger btn-sm'}]);
-  State.periods = pd ? pd.rows : State.periods;
-  populateSelects();
+  if (pd) {
+    renderTable('tbl-periods', pd.rows,
+      [{key:'name',label:'Periodo'},{key:'type',label:'Tipo',badge:true},
+       {key:'start_date',label:'Inicio',date:true},{key:'end_date',label:'Fin',date:true},
+       {key:'status',label:'Estado',badge:true}],
+      [{label:'✏️',fn:'M.period.edit',cls:'btn-secondary'},
+       {label:'🔒 Cerrar',fn:'closePeriodBtn',cls:'btn-danger btn-sm'}]);
+    State.periods = pd.rows;
+    populateSelects();
+  }
+}
+async function closePeriodBtn(id) {
+  if (!confirm('¿Cerrar este periodo?')) return;
+  const r = await api('close_period', { id });
+  if (r) { toast('Periodo cerrado', 'ok'); loadCalendar(); }
 }
 
+/* ── SESSIONS ────────────────────────────────────────── */
 async function loadSessions() {
   const r = await api('get_sessions');
-  if (r) renderTable('tbl-sessions', r.rows,
-    [{key:'date',label:'Fecha',date:true},{key:'start_time',label:'Inicio'},{key:'end_time',label:'Fin'},
-     {key:'room',label:'Salón'},{key:'summary',label:'Resumen'},{key:'status',label:'Estado',badge:true}],
+  if (!r) return;
+  State.sessions = r.rows || [];
+  renderTable('tbl-sessions', r.rows,
+    [{key:'date',label:'Fecha',date:true},{key:'start_time',label:'Inicio'},
+     {key:'end_time',label:'Fin'},{key:'room',label:'Salón'},
+     {key:'summary',label:'Resumen'},{key:'status',label:'Estado',badge:true}],
     [{label:'✏️',fn:'M.session.edit',cls:'btn-secondary'},
      {label:'✅ Asistencia',fn:'openAttForSession',cls:'btn-success btn-sm'},
-     {label:'🔒 Cerrar',fn:'closeSession',cls:'btn-danger btn-sm'}]);
-
-  // Populate attendance session select
-  if (r) {
-    State.sessions = r.rows;
-    fillSelect('att-session', r.rows.filter(s=>s.status!=='closed'), 'id',
-      s => `${fmtDate(s.date)} ${s.start_time||''}`, '— Seleccionar sesión —');
-    const el = document.getElementById('att-session');
-    if (el) el.innerHTML = `<option value="">— Seleccionar sesión —</option>` +
+     {label:'🔒',fn:'closeSessionBtn',cls:'btn-danger btn-sm'}]);
+  // Actualizar select de asistencia
+  const sel = document.getElementById('att-session');
+  if (sel) {
+    sel.innerHTML = `<option value="">— Seleccionar sesión —</option>` +
       (r.rows||[]).filter(s=>s.status!=='closed').map(s=>
         `<option value="${s.id}">${fmtDate(s.date)} ${s.start_time||''}</option>`).join('');
   }
 }
-
-async function openAttForSession(sessionId) {
-  nav('attendance');
-  await loadAttendanceView();
-  const sel = document.getElementById('att-session');
-  if (sel) { sel.value = sessionId; loadAttStudents(); }
-}
-
-async function closeSession(id) {
+async function closeSessionBtn(id) {
   if (!confirm('¿Cerrar esta sesión?')) return;
   const r = await api('close_session', { id });
-  if (r) { toast('Sesión cerrada', 'ok'); loadSessions(); }
+  if (r) { toast('Sesión cerrada','ok'); loadSessions(); }
+}
+async function openAttForSession(sessionId) {
+  nav('attendance');
+  await loadSessions();
+  const sel = document.getElementById('att-session');
+  if (sel) { sel.value = sessionId; loadAttStudents(); }
 }
 
 /* ── ATTENDANCE ──────────────────────────────────────── */
 async function loadAttendanceView() {
   await loadSessions();
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('att-date').value = today;
+  document.getElementById('att-date').value = new Date().toISOString().split('T')[0];
   const r = await api('get_attendance');
   if (r) renderTable('tbl-attendance', r.rows,
-    [{key:'student_id',label:'Alumno ID'},{key:'date',label:'Fecha',date:true},
-     {key:'status',label:'Estado',badge:true},{key:'notes',label:'Notas'}],
-    [{label:'✏️',fn:'editAttendance',cls:'btn-secondary'}]);
+    [{key:'student_id',label:'Alumno',format:(row)=>State.students.find(s=>s.id===row.student_id)?.name||row.student_id},
+     {key:'date',label:'Fecha',date:true},{key:'status',label:'Estado',badge:true},{key:'notes',label:'Notas'}]);
 }
-
 async function loadAttStudents() {
   const sessionId = formVal('att-session');
-  if (!sessionId) {
-    document.getElementById('att-list-wrap').innerHTML = '';
-    document.getElementById('att-actions').style.display = 'none';
-    return;
-  }
-  const session = State.sessions.find(s => s.id === sessionId);
-  if (!session) return;
-  // Get enrolled students for the assignment's group
-  const assn = State.assignments.find(a => a.id === session.assignment_id);
+  if (!sessionId) { document.getElementById('att-list-wrap').innerHTML=''; document.getElementById('att-actions').style.display='none'; return; }
   let students = State.students;
-  if (assn) {
-    const enrRes = await api('get_enrollments', { group_id: assn.group_id });
-    if (enrRes) {
-      const ids = enrRes.rows.map(e => e.student_id);
-      students = State.students.filter(s => ids.includes(s.id));
+  const session = State.sessions.find(s => s.id === sessionId);
+  if (session) {
+    const asn = State.assignments.find(a => a.id === session.assignment_id);
+    if (asn) {
+      const enrRes = await api('get_enrollments', { group_id: asn.group_id });
+      if (enrRes) {
+        const ids = enrRes.rows.map(e => e.student_id);
+        students = State.students.filter(s => ids.includes(s.id));
+      }
     }
   }
-  if (!students.length) students = State.students;
-
-  document.getElementById('att-list-wrap').innerHTML = `
-    <div class="att-list">${students.map(s => `
-      <div class="att-row">
-        <span class="att-name">${s.name} <span style="font-size:11px;color:var(--muted)">${s.enrollment_number||''}</span></span>
-        <div class="att-radios">
-          <label class="att-radio p"><input type="radio" name="att-${s.id}" value="present"> ✅ P</label>
-          <label class="att-radio a"><input type="radio" name="att-${s.id}" value="absent">  ❌ A</label>
-          <label class="att-radio l"><input type="radio" name="att-${s.id}" value="late">    ⏰ R</label>
-          <label class="att-radio j"><input type="radio" name="att-${s.id}" value="justified"> 📄 J</label>
-        </div>
-      </div>`).join('')}
-    </div>`;
+  if (!students.length) students = State.students.slice(0,5);
+  document.getElementById('att-list-wrap').innerHTML = `<div class="att-list">${students.map(s=>`
+    <div class="att-row">
+      <span class="att-name">${s.name} <span style="font-size:11px;color:var(--muted)">${s.enrollment_number||''}</span></span>
+      <div class="att-radios">
+        <label class="att-radio" style="color:var(--green)"><input type="radio" name="att-${s.id}" value="present"> ✅ P</label>
+        <label class="att-radio" style="color:var(--red)"><input type="radio" name="att-${s.id}" value="absent"> ❌ A</label>
+        <label class="att-radio" style="color:var(--amber)"><input type="radio" name="att-${s.id}" value="late"> ⏰ R</label>
+        <label class="att-radio" style="color:var(--indigo)"><input type="radio" name="att-${s.id}" value="justified"> 📄 J</label>
+      </div>
+    </div>`).join('')}</div>`;
   document.getElementById('att-actions').style.display = 'flex';
   markAll('present');
 }
-
 function markAll(status) {
   document.querySelectorAll(`input[type=radio][value="${status}"]`).forEach(r => r.checked = true);
 }
-
 async function saveAttendance() {
-  const sessionId = formVal('att-session');
-  const date      = formVal('att-date');
-  const periodId  = formVal('att-period');
+  const sessionId = formVal('att-session'), date = formVal('att-date'), periodId = formVal('att-period');
   const records = [];
   document.querySelectorAll('.att-row').forEach(row => {
-    const radios = row.querySelectorAll('input[type=radio]');
-    const checked = [...radios].find(r => r.checked);
-    if (checked) {
-      const name = checked.name; // att-STUDENT_ID
-      records.push({ student_id: name.replace('att-',''), status: checked.value });
-    }
+    const checked = [...row.querySelectorAll('input[type=radio]')].find(r => r.checked);
+    if (checked) records.push({ student_id: checked.name.replace('att-',''), status: checked.value });
   });
-  if (!records.length) { toast('Selecciona una sesión y alumnos', 'warn'); return; }
-  const r = await api('save_attendance', { session_id: sessionId, date, period_id: periodId, records });
-  if (r) { toast(`✅ ${r.count} registros guardados`, 'ok'); loadAttendanceView(); }
+  if (!records.length) { toast('Selecciona una sesión primero','warn'); return; }
+  const r = await api('save_attendance', { session_id:sessionId, date, period_id:periodId, records });
+  if (r) { toast(`${r.count} registros guardados`,'ok'); loadAttendanceView(); }
 }
 
 /* ── TRACKING ────────────────────────────────────────── */
@@ -1234,23 +1312,18 @@ async function loadTracking() {
   if (studentId) {
     const r = await api('student_timeline', { id: studentId });
     if (r) {
-      const items = r.timeline || [];
-      document.getElementById('track-timeline').innerHTML = items.length
-        ? `<div class="timeline">${items.map(i => `
-            <div class="tl-item">
-              <div class="tl-dot ${i.type}"></div>
-              <div class="tl-card">
-                <div class="tl-meta">${i.type.toUpperCase()} · ${fmtDate(i.date)}</div>
-                <div>${i.data.content || i.data.title || i.data.score || '—'}</div>
-              </div>
-            </div>`).join('')}</div>`
+      document.getElementById('track-timeline').innerHTML = (r.timeline||[]).length
+        ? `<div class="timeline">${(r.timeline||[]).map(i=>`
+            <div class="tl-item"><div class="tl-dot ${i.type}"></div>
+              <div class="tl-card"><div class="tl-meta">${i.type.toUpperCase()} · ${fmtDate(i.date)}</div>
+                <div>${i.data.content||i.data.title||i.data.score||'—'}</div></div></div>`).join('')}</div>`
         : '<p class="text-muted" style="padding:16px">Sin registros para este alumno.</p>';
     }
   }
   const r2 = await api('get_observations');
   if (r2) renderTable('tbl-observations', r2.rows,
-    [{key:'student_id',label:'Alumno ID'},{key:'type',label:'Tipo'},
-     {key:'content',label:'Contenido'},{key:'visibility',label:'Visibilidad'},
+    [{key:'student_id',label:'Alumno',format:(row)=>State.students.find(s=>s.id===row.student_id)?.name||row.student_id},
+     {key:'type',label:'Tipo',badge:true},{key:'content',label:'Observación'},
      {key:'created_at',label:'Fecha',date:true}],
     [{label:'✏️',fn:'M.observation.edit',cls:'btn-secondary'}]);
 }
@@ -1259,558 +1332,424 @@ async function loadTracking() {
 async function loadAnnouncements() {
   const r = await api('get_announcements');
   if (!r) return;
-  const el = document.getElementById('ann-list');
-  el.innerHTML = (r.rows||[]).map(a => `
-    <div style="border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;background:#fff">
+  document.getElementById('ann-list').innerHTML = (r.rows||[]).map(a=>`
+    <div class="ann-card">
       <div style="display:flex;justify-content:space-between;align-items:start;gap:8px">
-        <div>
+        <div style="flex:1">
           <h3>${a.title}</h3>
           <p style="margin-top:6px;color:var(--muted);font-size:13px">${a.content}</p>
-          <div style="font-size:11px;color:var(--muted);margin-top:8px">${fmtDate(a.created_at)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px">${fmtDate(a.created_at)} · ${badge(a.target_type||'all')}</div>
         </div>
         <button class="btn btn-sm btn-danger" onclick="delAnnouncement('${a.id}')">🗑️</button>
       </div>
-    </div>`).join('') || '<p class="text-muted" style="padding:20px">Sin anuncios.</p>';
+    </div>`).join('') || '<p class="tbl-empty">Sin anuncios.</p>';
 }
-
 async function delAnnouncement(id) {
   if (!confirm('¿Eliminar este anuncio?')) return;
   const r = await api('delete_announcement', { id });
-  if (r) { toast('Anuncio eliminado', 'ok'); loadAnnouncements(); }
+  if (r) { toast('Eliminado','ok'); loadAnnouncements(); }
 }
 
 /* ── REPORTS ─────────────────────────────────────────── */
 async function runReport(type) {
   if (type === 'attendance') {
-    const group_id  = formVal('rpt-att-group');
-    const period_id = formVal('rpt-att-period');
-    const r = await api('report_attendance', { group_id, period_id });
-    if (r) renderAttReport(r.report);
+    const r = await api('report_attendance', { group_id:formVal('rpt-att-group'), period_id:formVal('rpt-att-period') });
+    if (r) {
+      document.getElementById('rpt-att-result').innerHTML = r.report.length
+        ? `<table><thead><tr><th>#</th><th>Alumno</th><th>Matrícula</th><th>✅ P</th><th>❌ A</th><th>⏰ R</th><th>📄 J</th><th>%</th></tr></thead>
+           <tbody>${r.report.map((row,i)=>`<tr><td>${i+1}</td><td>${row.name}</td><td>${row.enrollment||'—'}</td>
+             <td>${row.present}</td><td>${row.absent}</td><td>${row.late}</td><td>${row.justified}</td>
+             <td><span class="rpt-pct ${row.pct>=80?'pct-high':row.pct>=60?'pct-mid':'pct-low'}">${row.pct}%</span></td></tr>`).join('')}
+           </tbody></table>` : '<p class="tbl-empty">Sin datos.</p>';
+    }
   } else if (type === 'grades') {
-    const evaluation_id = formVal('rpt-grades-eval');
-    const r = await api('report_grades', { evaluation_id });
-    if (r) renderGradesReport(r.report);
-  } else if (type === 'load') {
+    const r = await api('report_grades', { evaluation_id:formVal('rpt-grades-eval') });
+    if (r) {
+      document.getElementById('rpt-grades-result').innerHTML = r.report.length
+        ? `<table><thead><tr><th>#</th><th>Alumno</th><th>Matrícula</th><th>Calificaciones</th><th>Promedio</th></tr></thead>
+           <tbody>${r.report.map((row,i)=>`<tr><td>${i+1}</td><td>${row.name}</td><td>${row.enrollment||'—'}</td>
+             <td>${row.grades.length}</td>
+             <td><span class="rpt-pct ${row.average>=80?'pct-high':row.average>=60?'pct-mid':'pct-low'}">${row.average}</span></td></tr>`).join('')}
+           </tbody></table>` : '<p class="tbl-empty">Sin datos.</p>';
+    }
+  } else {
     const r = await api('report_teacher_load');
-    if (r) renderLoadReport(r.report);
+    if (r) {
+      document.getElementById('rpt-load-result').innerHTML = r.report.length
+        ? `<table><thead><tr><th>Docente</th><th>Empleado</th><th>Asignaciones</th><th>Grupos / Materias</th></tr></thead>
+           <tbody>${r.report.map(row=>`<tr><td>${row.name}</td><td>${row.employee_number||'—'}</td><td>${row.count}</td>
+             <td style="font-size:12px">${row.assignments.map(a=>`${a.subject} (${a.group})`).join(', ')||'—'}</td></tr>`).join('')}
+           </tbody></table>` : '<p class="tbl-empty">Sin datos.</p>';
+    }
   }
-}
-
-function renderAttReport(data) {
-  const el = document.getElementById('rpt-att-result');
-  if (!data.length) { el.innerHTML = '<p class="text-muted">Sin datos.</p>'; return; }
-  el.innerHTML = `<table>
-    <thead><tr><th>#</th><th>Alumno</th><th>Matrícula</th>
-      <th>Presentes</th><th>Ausentes</th><th>Retardos</th><th>Justificados</th><th>%</th></tr></thead>
-    <tbody>${data.map((r,i) => {
-      const cls = r.pct>=80?'pct-high':r.pct>=60?'pct-mid':'pct-low';
-      return `<tr><td>${i+1}</td><td>${r.name}</td><td>${r.enrollment||'—'}</td>
-        <td>${r.present}</td><td>${r.absent}</td><td>${r.late}</td><td>${r.justified}</td>
-        <td><span class="rpt-pct ${cls}">${r.pct}%</span></td></tr>`;
-    }).join('')}</tbody></table>`;
-}
-
-function renderGradesReport(data) {
-  const el = document.getElementById('rpt-grades-result');
-  if (!data.length) { el.innerHTML = '<p class="text-muted">Sin datos.</p>'; return; }
-  el.innerHTML = `<table>
-    <thead><tr><th>#</th><th>Alumno</th><th>Matrícula</th><th>Evaluaciones</th><th>Promedio</th></tr></thead>
-    <tbody>${data.map((r,i) => {
-      const cls = r.average>=80?'pct-high':r.average>=60?'pct-mid':'pct-low';
-      return `<tr><td>${i+1}</td><td>${r.name}</td><td>${r.enrollment||'—'}</td>
-        <td>${r.grades.length}</td><td><span class="rpt-pct ${cls}">${r.average}</span></td></tr>`;
-    }).join('')}</tbody></table>`;
-}
-
-function renderLoadReport(data) {
-  const el = document.getElementById('rpt-load-result');
-  if (!data.length) { el.innerHTML = '<p class="text-muted">Sin datos.</p>'; return; }
-  el.innerHTML = `<table>
-    <thead><tr><th>Docente</th><th>Empleado</th><th>Asignaciones</th><th>Materias</th></tr></thead>
-    <tbody>${data.map(r => `<tr>
-      <td>${r.name}</td><td>${r.employee_number||'—'}</td><td>${r.count}</td>
-      <td style="font-size:12px">${r.assignments.map(a=>`${a.subject} (${a.group})`).join(', ')||'—'}</td>
-    </tr>`).join('')}</tbody></table>`;
 }
 
 /* ── AUDIT ───────────────────────────────────────────── */
 async function loadAudit() {
   const r = await api('get_audit_log');
   if (r) renderTable('tbl-audit', r.rows,
-    [{key:'timestamp',label:'Fecha',date:true},{key:'action',label:'Acción'},
-     {key:'entity',label:'Entidad'},{key:'user_id',label:'Usuario'}]);
+    [{key:'timestamp',label:'Fecha/Hora',date:true},{key:'action',label:'Acción'},
+     {key:'entity',label:'Entidad'},{key:'entity_id',label:'ID Registro'},{key:'user_id',label:'Usuario'}]);
 }
 
 /* ── TABS ────────────────────────────────────────────── */
 function switchTab(group, tab) {
-  const containers = { cal:['years','periods'], rpt:['att','grades','load'] };
-  const tabs = containers[group] || [];
-  tabs.forEach(t => {
+  const map = { cal:['years','periods'], rpt:['att','grades','load'] };
+  (map[group]||[]).forEach(t => {
     const el = document.getElementById(`${group}-${t}`);
     if (el) el.style.display = t === tab ? '' : 'none';
   });
-  document.querySelectorAll(`.tabs .tab`).forEach(b => {
-    b.classList.toggle('active', b.getAttribute('onclick')?.includes(`'${tab}'`));
-  });
+  document.querySelectorAll('.tabs .tab').forEach(b =>
+    b.classList.toggle('active', (b.getAttribute('onclick')||'').includes(`'${tab}'`)));
+}
+
+/* ── GRADING ─────────────────────────────────────────── */
+async function openGrading(activityId) {
+  const r = await api('get_activities');
+  const act = (r?.rows||DEMO.activities).find(a => a.id === activityId);
+  if (!act) { toast('Actividad no encontrada','err'); return; }
+  const students = State.students.slice(0, 8);
+  openModal('Calificar: ' + act.title, `
+    <div class="alert alert-info">Puntaje máximo: <b>${act.max_score||100}</b></div>
+    <div style="font-size:12px;font-weight:600;color:var(--muted);display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;padding:6px 0;border-bottom:2px solid var(--border);margin-bottom:8px">
+      <span>Alumno</span><span>Puntaje</span><span>Retroalimentación</span>
+    </div>
+    ${students.map(s=>`<div class="grade-row">
+      <span>${s.name}</span>
+      <input type="number" id="gs-${s.id}" min="0" max="${act.max_score||100}" placeholder="—"
+             style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:70px">
+      <input type="text" id="gf-${s.id}" placeholder="Comentario…"
+             style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:100%">
+    </div>`).join('')}`, async () => {
+    const grades = students.filter(s=>document.getElementById('gs-'+s.id)?.value!=='')
+      .map(s=>({student_id:s.id, score:document.getElementById('gs-'+s.id)?.value||0,
+                feedback:document.getElementById('gf-'+s.id)?.value||''}));
+    const res = await api('bulk_grade', { activity_id:activityId, max_score:act.max_score||100, grades });
+    if (res) { toast(`${res.count||grades.length} calificaciones guardadas`,'ok'); closeModal(); }
+  }, 'Guardar calificaciones');
+}
+
+async function openEvalGrading(evalId) {
+  const r = await api('get_evaluations');
+  const ev = (r?.rows||DEMO.evaluations).find(e => e.id === evalId);
+  if (!ev) { toast('Evaluación no encontrada','err'); return; }
+  const students = State.students.slice(0, 8);
+  openModal('Resultados: ' + ev.title, `
+    <div class="alert alert-info">Puntaje máximo: <b>${ev.max_score||100}</b></div>
+    ${students.map(s=>`<div class="grade-row">
+      <span>${s.name}</span>
+      <input type="number" id="es-${s.id}" min="0" max="${ev.max_score||100}" placeholder="—"
+             style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:70px">
+      <input type="text" id="ef-${s.id}" placeholder="Comentario…"
+             style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:100%">
+    </div>`).join('')}`, async () => {
+    const grades = students.filter(s=>document.getElementById('es-'+s.id)?.value!=='')
+      .map(s=>({student_id:s.id, score:document.getElementById('es-'+s.id)?.value||0,
+                feedback:document.getElementById('ef-'+s.id)?.value||''}));
+    const res = await api('save_results', { evaluation_id:evalId, max_score:ev.max_score||100, grades });
+    if (res) { toast(`${res.count||grades.length} resultados guardados`,'ok'); closeModal(); }
+  }, 'Guardar resultados');
 }
 
 /* ── MODULE FACTORY ──────────────────────────────────── */
 function makeModule(cfg) {
-  return {
+  const m = {
     load: async function() {
       const r = await api(cfg.apiGet, cfg.defaultFilters || {});
-      if (r) renderTable(cfg.tableId, r.rows, cfg.cols, cfg.actions(this));
+      if (r) renderTable(cfg.tableId, r.rows, cfg.cols, typeof cfg.actions==='function'?cfg.actions(this):cfg.actions||[]);
       if (cfg.onLoad) cfg.onLoad(r);
     },
     create: function() {
-      openModal('Nuevo: ' + cfg.title, buildForm(cfg.fields), async () => {
-        const d = formData(cfg.fields);
+      const fields = typeof cfg.fields==='function'?cfg.fields():cfg.fields;
+      openModal('Nuevo: '+cfg.title, buildForm(fields), async () => {
+        const d = formData(fields);
         const r = await api(cfg.apiCreate, d);
-        if (r) { toast(`${cfg.title} creado`, 'ok'); closeModal(); this.load(); }
+        if (r) { toast(cfg.title+' creado','ok'); closeModal(); this.load(); }
       });
     },
     edit: async function(id) {
       const r = await api(cfg.apiGet, cfg.defaultFilters || {});
       const row = (r?.rows||[]).find(x => x.id === id);
       if (!row) return;
-      openModal('Editar: ' + cfg.title, buildForm(cfg.fields, row), async () => {
-        const d = formData(cfg.fields);
+      const fields = typeof cfg.fields==='function'?cfg.fields():cfg.fields;
+      openModal('Editar: '+cfg.title, buildForm(fields, row), async () => {
+        const d = formData(fields);
         const res = await api(cfg.apiUpdate, { id, ...d });
-        if (res) { toast(`${cfg.title} actualizado`, 'ok'); closeModal(); this.load(); }
+        if (res) { toast(cfg.title+' actualizado','ok'); closeModal(); this.load(); }
       });
     },
     del: async function(id) {
-      if (!confirm(`¿Eliminar este registro de ${cfg.title}?`)) return;
+      if (!confirm('¿Eliminar este registro de '+cfg.title+'?')) return;
       const r = await api(cfg.apiDelete, { id });
-      if (r) { toast('Eliminado', 'ok'); this.load(); }
-    },
-    close: async function(id) {
-      if (!confirm('¿Cerrar este periodo?')) return;
-      const r = await api('close_period', { id });
-      if (r) { toast('Periodo cerrado', 'ok'); this.load(); }
+      if (r) { toast('Eliminado','ok'); this.load(); }
     },
   };
+  return m;
 }
 
 /* ── MODULES ─────────────────────────────────────────── */
 const M = {
   institution: makeModule({
-    title: 'Institución', tableId: 'tbl-inst', counterId: 'cnt-inst',
-    apiGet: 'get_institutions', apiCreate: 'create_institution',
-    apiUpdate: 'update_institution', apiDelete: 'delete_institution',
-    cols: [{key:'name',label:'Nombre'},{key:'short_name',label:'Clave'},
-           {key:'email',label:'Correo'},{key:'phone',label:'Teléfono'},{key:'status',label:'Estado',badge:true}],
+    title:'Institución', tableId:'tbl-inst',
+    apiGet:'get_institutions', apiCreate:'create_institution',
+    apiUpdate:'update_institution', apiDelete:'delete_institution',
+    cols:[{key:'name',label:'Nombre'},{key:'short_name',label:'Clave'},
+          {key:'email',label:'Correo'},{key:'phone',label:'Teléfono'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.institution.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.institution.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'name',label:'Nombre completo',required:true},
-      {name:'short_name',label:'Nombre corto'},
-      {name:'address',label:'Dirección',full:true},
-      {name:'phone',label:'Teléfono'},{name:'email',label:'Correo electrónico',type:'email'},
+    fields:[
+      {name:'name',label:'Nombre completo',required:true,full:true},
+      {name:'short_name',label:'Nombre corto'},{name:'address',label:'Dirección',full:true},
+      {name:'phone',label:'Teléfono'},{name:'email',label:'Correo',type:'email'},
       {name:'website',label:'Sitio web'},
     ],
   }),
-
   year: makeModule({
-    title: 'Ciclo Escolar', tableId: 'tbl-years',
-    apiGet: 'get_years', apiCreate: 'create_year',
-    apiUpdate: 'update_year', apiDelete: 'delete_year',
-    cols: [{key:'name',label:'Ciclo'},{key:'start_date',label:'Inicio',date:true},
-           {key:'end_date',label:'Fin',date:true},{key:'status',label:'Estado',badge:true}],
+    title:'Ciclo Escolar', tableId:'tbl-years',
+    apiGet:'get_years', apiCreate:'create_year', apiUpdate:'update_year', apiDelete:'delete_year',
+    cols:[{key:'name',label:'Ciclo'},{key:'start_date',label:'Inicio',date:true},
+          {key:'end_date',label:'Fin',date:true},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.year.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.year.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'name',label:'Nombre del ciclo (ej. 2024-2025)',required:true},
-      {name:'start_date',label:'Inicio',type:'date',required:true},
-      {name:'end_date',label:'Fin',type:'date',required:true},
-    ],
+    fields:[{name:'name',label:'Nombre (ej. 2024-2025)',required:true},
+            {name:'start_date',label:'Inicio',type:'date'},{name:'end_date',label:'Fin',type:'date'}],
   }),
-
   period: makeModule({
-    title: 'Periodo', tableId: 'tbl-periods',
-    apiGet: 'get_periods', apiCreate: 'create_period',
-    apiUpdate: 'update_period', apiDelete: 'close_period',
-    cols: [{key:'name',label:'Periodo'},{key:'type',label:'Tipo'},
-           {key:'start_date',label:'Inicio',date:true},{key:'end_date',label:'Fin',date:true},
-           {key:'status',label:'Estado',badge:true}],
+    title:'Periodo', tableId:'tbl-periods',
+    apiGet:'get_periods', apiCreate:'create_period', apiUpdate:'update_period', apiDelete:'close_period',
+    cols:[{key:'name',label:'Periodo'},{key:'type',label:'Tipo',badge:true},
+          {key:'start_date',label:'Inicio',date:true},{key:'end_date',label:'Fin',date:true},
+          {key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.period.edit',cls:'btn-secondary'},
-                      {label:'🔒 Cerrar',fn:'M.period.close',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'name',label:'Nombre del periodo',required:true},
-      {name:'type',label:'Tipo',type:'select',options:[
-        {value:'semester',label:'Semestre'},{value:'trimester',label:'Trimestre'},
-        {value:'bimester',label:'Bimestre'},{value:'quarter',label:'Cuatrimestre'}]},
-      {name:'start_date',label:'Inicio',type:'date'},{name:'end_date',label:'Fin',type:'date'},
-    ],
+                      {label:'🔒 Cerrar',fn:'closePeriodBtn',cls:'btn-danger btn-sm'}],
+    fields:[{name:'name',label:'Nombre del periodo',required:true},
+            {name:'type',label:'Tipo',type:'select',options:[{value:'semester',label:'Semestre'},
+              {value:'trimester',label:'Trimestre'},{value:'bimester',label:'Bimestre'},{value:'quarter',label:'Cuatrimestre'}]},
+            {name:'start_date',label:'Inicio',type:'date'},{name:'end_date',label:'Fin',type:'date'}],
   }),
-
   group: makeModule({
-    title: 'Grupo', tableId: 'tbl-groups',
-    apiGet: 'get_groups', apiCreate: 'create_group',
-    apiUpdate: 'update_group', apiDelete: 'delete_group',
-    cols: [{key:'name',label:'Grupo'},{key:'grade',label:'Grado'},{key:'shift',label:'Turno'},
-           {key:'room',label:'Salón'},{key:'capacity',label:'Cupo'},{key:'status',label:'Estado',badge:true}],
+    title:'Grupo', tableId:'tbl-groups',
+    apiGet:'get_groups', apiCreate:'create_group', apiUpdate:'update_group', apiDelete:'delete_group',
+    cols:[{key:'name',label:'Grupo'},{key:'grade',label:'Grado'},{key:'shift',label:'Turno'},
+          {key:'room',label:'Salón'},{key:'capacity',label:'Cupo'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.group.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.group.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'name',label:'Nombre del grupo',required:true},
-      {name:'grade',label:'Grado'},{name:'shift',label:'Turno',type:'select',options:[
-        {value:'morning',label:'Matutino'},{value:'afternoon',label:'Vespertino'},
-        {value:'evening',label:'Nocturno'}]},
-      {name:'room',label:'Salón'},{name:'capacity',label:'Capacidad',type:'number'},
-    ],
+    fields:[{name:'name',label:'Nombre del grupo',required:true},{name:'grade',label:'Grado'},
+            {name:'shift',label:'Turno',type:'select',options:[{value:'morning',label:'Matutino'},
+              {value:'afternoon',label:'Vespertino'},{value:'evening',label:'Nocturno'}]},
+            {name:'room',label:'Salón'},{name:'capacity',label:'Capacidad',type:'number'}],
   }),
-
   department: makeModule({
-    title: 'Departamento', tableId: 'tbl-departments',
-    apiGet: 'get_departments', apiCreate: 'create_department', apiUpdate: 'update_department',
-    cols: [{key:'name',label:'Departamento'},{key:'status',label:'Estado',badge:true}],
+    title:'Departamento', tableId:'tbl-departments',
+    apiGet:'get_departments', apiCreate:'create_department', apiUpdate:'update_department', apiDelete:'update_department',
+    cols:[{key:'name',label:'Departamento'},{key:'status',label:'Estado',badge:true}],
     actions: () => [{label:'✏️',fn:'M.department.edit',cls:'btn-secondary'}],
-    fields: [{name:'name',label:'Nombre del departamento',required:true}],
+    fields:[{name:'name',label:'Nombre del departamento',required:true}],
   }),
-
   subject: makeModule({
-    title: 'Materia', tableId: 'tbl-subjects',
-    apiGet: 'get_subjects', apiCreate: 'create_subject',
-    apiUpdate: 'update_subject', apiDelete: 'delete_subject',
-    cols: [{key:'name',label:'Materia'},{key:'short_name',label:'Clave'},
-           {key:'code',label:'Código'},{key:'credits',label:'Créditos'},
-           {key:'hours_per_week',label:'Hrs/sem'},{key:'status',label:'Estado',badge:true}],
+    title:'Materia', tableId:'tbl-subjects',
+    apiGet:'get_subjects', apiCreate:'create_subject', apiUpdate:'update_subject', apiDelete:'delete_subject',
+    cols:[{key:'name',label:'Materia'},{key:'short_name',label:'Clave'},{key:'code',label:'Código'},
+          {key:'credits',label:'Créditos'},{key:'hours_per_week',label:'Hrs/sem'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.subject.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.subject.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'name',label:'Nombre de la materia',required:true},
-      {name:'short_name',label:'Nombre corto'},{name:'code',label:'Clave/Código'},
-      {name:'credits',label:'Créditos',type:'number'},{name:'hours_per_week',label:'Horas por semana',type:'number'},
-      {name:'description',label:'Descripción',type:'textarea',full:true},
-    ],
+    fields:[{name:'name',label:'Nombre',required:true},{name:'short_name',label:'Nombre corto'},
+            {name:'code',label:'Código'},{name:'credits',label:'Créditos',type:'number'},
+            {name:'hours_per_week',label:'Hrs/semana',type:'number'},
+            {name:'description',label:'Descripción',type:'textarea',full:true}],
   }),
-
   teacher: makeModule({
-    title: 'Docente', tableId: 'tbl-teachers',
-    apiGet: 'get_teachers', apiCreate: 'create_teacher',
-    apiUpdate: 'update_teacher', apiDelete: 'delete_teacher',
-    cols: [{key:'employee_number',label:'No. Empleado'},{key:'name',label:'Nombre'},
-           {key:'email',label:'Correo'},{key:'phone',label:'Teléfono'},
-           {key:'speciality',label:'Especialidad'},{key:'status',label:'Estado',badge:true}],
+    title:'Docente', tableId:'tbl-teachers',
+    apiGet:'get_teachers', apiCreate:'create_teacher', apiUpdate:'update_teacher', apiDelete:'delete_teacher',
+    cols:[{key:'employee_number',label:'No. Empleado'},{key:'name',label:'Nombre'},
+          {key:'email',label:'Correo'},{key:'speciality',label:'Especialidad'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.teacher.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.teacher.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'employee_number',label:'Número de empleado',required:true},
-      {name:'name',label:'Nombre completo',required:true},
-      {name:'email',label:'Correo electrónico',type:'email'},
-      {name:'phone',label:'Teléfono'},{name:'speciality',label:'Especialidad'},
-      {name:'hire_date',label:'Fecha de contratación',type:'date'},
-    ],
-    onLoad: async (r) => { if(r) { State.teachers = r.rows; } }
+    fields:[{name:'employee_number',label:'Número de empleado',required:true},
+            {name:'name',label:'Nombre completo',required:true},
+            {name:'email',label:'Correo',type:'email'},{name:'phone',label:'Teléfono'},
+            {name:'speciality',label:'Especialidad'},{name:'hire_date',label:'Fecha de contratación',type:'date'}],
+    onLoad: (r) => { if(r) { State.teachers = r.rows; } },
   }),
-
   assignment: makeModule({
-    title: 'Asignación Docente', tableId: 'tbl-assignments',
-    apiGet: 'get_assignments', apiCreate: 'create_assignment',
-    apiUpdate: 'update_assignment', apiDelete: 'delete_assignment',
-    cols: [
+    title:'Asignación', tableId:'tbl-assignments',
+    apiGet:'get_assignments', apiCreate:'create_assignment', apiUpdate:'update_assignment', apiDelete:'delete_assignment',
+    cols:[
       {key:'teacher_id',label:'Docente',format:(r)=>State.teachers.find(t=>t.id===r.teacher_id)?.name||r.teacher_id},
       {key:'subject_id',label:'Materia',format:(r)=>State.subjects.find(s=>s.id===r.subject_id)?.name||r.subject_id},
       {key:'group_id',label:'Grupo',format:(r)=>State.groups.find(g=>g.id===r.group_id)?.name||r.group_id},
-      {key:'schedule',label:'Horario'},{key:'room',label:'Salón'},{key:'status',label:'Estado',badge:true}
+      {key:'schedule',label:'Horario'},{key:'status',label:'Estado',badge:true},
     ],
     actions: self => [{label:'✏️',fn:'M.assignment.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.assignment.del',cls:'btn-danger btn-sm'}],
     get fields() { return [
-      {name:'teacher_id',label:'Docente',required:true,type:'select',
-        options:State.teachers.map(t=>({value:t.id,label:t.name}))},
-      {name:'subject_id',label:'Materia',required:true,type:'select',
-        options:State.subjects.map(s=>({value:s.id,label:s.name}))},
-      {name:'group_id',label:'Grupo',required:true,type:'select',
-        options:State.groups.map(g=>({value:g.id,label:g.name}))},
-      {name:'period_id',label:'Periodo',type:'select',
-        options:State.periods.map(p=>({value:p.id,label:p.name}))},
-      {name:'schedule',label:'Horario (ej. Lun-Mié 10:00-11:30)'},{name:'room',label:'Salón'},
-      {name:'notes',label:'Notas',type:'textarea',full:true},
+      {name:'teacher_id',label:'Docente',required:true,type:'select',options:State.teachers.map(t=>({value:t.id,label:t.name}))},
+      {name:'subject_id',label:'Materia',required:true,type:'select',options:State.subjects.map(s=>({value:s.id,label:s.name}))},
+      {name:'group_id',label:'Grupo',required:true,type:'select',options:State.groups.map(g=>({value:g.id,label:g.name}))},
+      {name:'period_id',label:'Periodo',type:'select',options:State.periods.map(p=>({value:p.id,label:p.name}))},
+      {name:'schedule',label:'Horario (ej. Lun-Mié 08:00)'},{name:'room',label:'Salón'},
     ]; },
-    onLoad: async (r) => { if(r) { State.assignments = r.rows; } }
+    onLoad: (r) => { if(r) { State.assignments = r.rows; } },
   }),
-
   student: makeModule({
-    title: 'Alumno', tableId: 'tbl-students',
-    apiGet: 'get_students', apiCreate: 'create_student',
-    apiUpdate: 'update_student', apiDelete: 'delete_student',
-    cols: [{key:'enrollment_number',label:'Matrícula'},{key:'name',label:'Nombre'},
-           {key:'email',label:'Correo'},{key:'phone',label:'Teléfono'},
-           {key:'parent_name',label:'Tutor'},{key:'status',label:'Estado',badge:true}],
+    title:'Alumno', tableId:'tbl-students',
+    apiGet:'get_students', apiCreate:'create_student', apiUpdate:'update_student', apiDelete:'delete_student',
+    cols:[{key:'enrollment_number',label:'Matrícula'},{key:'name',label:'Nombre'},
+          {key:'email',label:'Correo'},{key:'phone',label:'Teléfono'},
+          {key:'parent_name',label:'Tutor'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.student.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.student.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'enrollment_number',label:'Matrícula',required:true},
-      {name:'name',label:'Nombre completo',required:true},
-      {name:'email',label:'Correo electrónico',type:'email'},
-      {name:'phone',label:'Teléfono'},{name:'birth_date',label:'Fecha de nacimiento',type:'date'},
-      {name:'address',label:'Dirección',full:true},
-      {name:'parent_name',label:'Nombre del tutor'},{name:'parent_phone',label:'Teléfono del tutor'},
-      {name:'parent_email',label:'Correo del tutor',type:'email'},
-      {name:'notes',label:'Notas',type:'textarea',full:true},
-    ],
-    onLoad: async (r) => { if(r) { State.students = r.rows; populateSelects(); } }
+    fields:[{name:'enrollment_number',label:'Matrícula',required:true},
+            {name:'name',label:'Nombre completo',required:true},
+            {name:'email',label:'Correo',type:'email'},{name:'phone',label:'Teléfono'},
+            {name:'birth_date',label:'Nacimiento',type:'date'},{name:'address',label:'Dirección',full:true},
+            {name:'parent_name',label:'Nombre del tutor'},{name:'parent_phone',label:'Tel. tutor'},
+            {name:'parent_email',label:'Correo tutor',type:'email'},
+            {name:'notes',label:'Notas',type:'textarea',full:true}],
+    onLoad: (r) => { if(r) { State.students = r.rows; populateSelects(); } },
   }),
-
   enrollment: makeModule({
-    title: 'Inscripción', tableId: 'tbl-enrollments',
-    apiGet: 'get_enrollments', apiCreate: 'create_enrollment',
-    apiUpdate: 'update_enrollment', apiDelete: 'update_enrollment',
-    cols: [
+    title:'Inscripción', tableId:'tbl-enrollments',
+    apiGet:'get_enrollments', apiCreate:'create_enrollment', apiUpdate:'update_enrollment', apiDelete:'update_enrollment',
+    cols:[
       {key:'student_id',label:'Alumno',format:(r)=>State.students.find(s=>s.id===r.student_id)?.name||r.student_id},
       {key:'group_id',label:'Grupo',format:(r)=>State.groups.find(g=>g.id===r.group_id)?.name||r.group_id},
       {key:'period_id',label:'Periodo',format:(r)=>State.periods.find(p=>p.id===r.period_id)?.name||r.period_id},
-      {key:'enrollment_date',label:'Fecha',date:true},{key:'status',label:'Estado',badge:true}
+      {key:'enrollment_date',label:'Fecha',date:true},{key:'status',label:'Estado',badge:true},
     ],
     actions: () => [{label:'✏️',fn:'M.enrollment.edit',cls:'btn-secondary'}],
     get fields() { return [
-      {name:'student_id',label:'Alumno',required:true,type:'select',
-        options:State.students.map(s=>({value:s.id,label:s.name+' ('+s.enrollment_number+')'}))},
-      {name:'group_id',label:'Grupo',required:true,type:'select',
-        options:State.groups.map(g=>({value:g.id,label:g.name}))},
-      {name:'period_id',label:'Periodo',type:'select',
-        options:State.periods.map(p=>({value:p.id,label:p.name}))},
+      {name:'student_id',label:'Alumno',required:true,type:'select',options:State.students.map(s=>({value:s.id,label:s.name+' ('+s.enrollment_number+')'}))},
+      {name:'group_id',label:'Grupo',required:true,type:'select',options:State.groups.map(g=>({value:g.id,label:g.name}))},
+      {name:'period_id',label:'Periodo',type:'select',options:State.periods.map(p=>({value:p.id,label:p.name}))},
       {name:'enrollment_date',label:'Fecha de inscripción',type:'date'},
     ]; },
   }),
-
   planning: makeModule({
-    title: 'Planeación', tableId: 'tbl-planning',
-    apiGet: 'get_plannings', apiCreate: 'create_planning',
-    apiUpdate: 'update_planning', apiDelete: 'delete_planning',
-    cols: [{key:'title',label:'Título'},{key:'description',label:'Descripción'},
-           {key:'version',label:'Versión'},{key:'status',label:'Estado',badge:true}],
+    title:'Planeación', tableId:'tbl-planning',
+    apiGet:'get_plannings', apiCreate:'create_planning', apiUpdate:'update_planning', apiDelete:'delete_planning',
+    cols:[{key:'title',label:'Título'},{key:'version',label:'Versión'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.planning.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.planning.del',cls:'btn-danger btn-sm'}],
     get fields() { return [
-      {name:'title',label:'Título',required:true},
-      {name:'assignment_id',label:'Asignación',type:'select',
-        options:State.assignments.map(a=>{
-          const t=State.teachers.find(x=>x.id===a.teacher_id);
-          const s=State.subjects.find(x=>x.id===a.subject_id);
-          return {value:a.id,label:`${t?.name||'?'} — ${s?.name||'?'}`};
-        })},
+      {name:'title',label:'Título',required:true,full:true},
+      {name:'assignment_id',label:'Asignación',type:'select',options:State.assignments.map(a=>{
+        const t=State.teachers.find(x=>x.id===a.teacher_id);
+        const s=State.subjects.find(x=>x.id===a.subject_id);
+        return {value:a.id,label:`${t?.name||'?'} — ${s?.name||'?'}`};
+      })},
       {name:'objectives',label:'Objetivos',type:'textarea',full:true},
       {name:'competencies',label:'Competencias',type:'textarea',full:true},
-      {name:'description',label:'Descripción general',type:'textarea',full:true},
     ]; },
   }),
-
   session: makeModule({
-    title: 'Sesión de Clase', tableId: 'tbl-sessions',
-    apiGet: 'get_sessions', apiCreate: 'create_session',
-    apiUpdate: 'update_session', apiDelete: 'close_session',
-    cols: [{key:'date',label:'Fecha',date:true},{key:'start_time',label:'Inicio'},
-           {key:'end_time',label:'Fin'},{key:'room',label:'Salón'},
-           {key:'summary',label:'Resumen'},{key:'status',label:'Estado',badge:true}],
+    title:'Sesión de Clase', tableId:'tbl-sessions',
+    apiGet:'get_sessions', apiCreate:'create_session', apiUpdate:'update_session', apiDelete:'close_session',
+    cols:[{key:'date',label:'Fecha',date:true},{key:'start_time',label:'Inicio'},
+          {key:'end_time',label:'Fin'},{key:'room',label:'Salón'},
+          {key:'summary',label:'Resumen'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.session.edit',cls:'btn-secondary'},
                       {label:'✅ Asistencia',fn:'openAttForSession',cls:'btn-success btn-sm'}],
     get fields() { return [
-      {name:'assignment_id',label:'Asignación',type:'select',
-        options:State.assignments.map(a=>{
-          const t=State.teachers.find(x=>x.id===a.teacher_id);
-          const s=State.subjects.find(x=>x.id===a.subject_id);
-          return {value:a.id,label:`${t?.name||'?'} — ${s?.name||'?'}`};
-        })},
+      {name:'assignment_id',label:'Asignación',type:'select',options:State.assignments.map(a=>{
+        const t=State.teachers.find(x=>x.id===a.teacher_id);
+        const s=State.subjects.find(x=>x.id===a.subject_id);
+        return {value:a.id,label:`${t?.name||'?'} — ${s?.name||'?'}`};
+      })},
       {name:'date',label:'Fecha',type:'date',required:true},
       {name:'start_time',label:'Hora inicio',type:'time'},{name:'end_time',label:'Hora fin',type:'time'},
-      {name:'room',label:'Salón'},
-      {name:'summary',label:'Resumen de la sesión',type:'textarea',full:true},
-      {name:'notes',label:'Notas adicionales',type:'textarea',full:true},
+      {name:'room',label:'Salón'},{name:'summary',label:'Resumen',type:'textarea',full:true},
     ]; },
   }),
-
   activity: makeModule({
-    title: 'Actividad', tableId: 'tbl-activities',
-    apiGet: 'get_activities', apiCreate: 'create_activity',
-    apiUpdate: 'update_activity', apiDelete: 'delete_activity',
-    cols: [{key:'title',label:'Título'},{key:'type',label:'Tipo'},
-           {key:'due_date',label:'Entrega',date:true},{key:'max_score',label:'Puntaje máx'},
-           {key:'status',label:'Estado',badge:true}],
+    title:'Actividad', tableId:'tbl-activities',
+    apiGet:'get_activities', apiCreate:'create_activity', apiUpdate:'update_activity', apiDelete:'delete_activity',
+    cols:[{key:'title',label:'Título'},{key:'type',label:'Tipo',badge:true},
+          {key:'due_date',label:'Entrega',date:true},{key:'max_score',label:'Puntaje'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.activity.edit',cls:'btn-secondary'},
                       {label:'📊 Calificar',fn:'openGrading',cls:'btn-success btn-sm'},
                       {label:'🗑️',fn:'M.activity.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'title',label:'Título de la actividad',required:true},
-      {name:'type',label:'Tipo',type:'select',options:[
-        {value:'homework',label:'Tarea'},{value:'project',label:'Proyecto'},
-        {value:'classwork',label:'Trabajo en clase'},{value:'quiz',label:'Quiz'},
-        {value:'lab',label:'Laboratorio'},{value:'other',label:'Otro'}]},
-      {name:'due_date',label:'Fecha de entrega',type:'date'},
-      {name:'max_score',label:'Puntaje máximo',type:'number',default:100},
-      {name:'instructions',label:'Instrucciones',type:'textarea',full:true},
-      {name:'description',label:'Descripción',type:'textarea',full:true},
-    ],
+    fields:[{name:'title',label:'Título',required:true,full:true},
+            {name:'type',label:'Tipo',type:'select',options:[{value:'homework',label:'Tarea'},
+              {value:'project',label:'Proyecto'},{value:'classwork',label:'Trabajo en clase'},
+              {value:'quiz',label:'Quiz'},{value:'other',label:'Otro'}]},
+            {name:'due_date',label:'Fecha de entrega',type:'date'},
+            {name:'max_score',label:'Puntaje máximo',type:'number',default:100},
+            {name:'instructions',label:'Instrucciones',type:'textarea',full:true}],
   }),
-
   evaluation: makeModule({
-    title: 'Evaluación', tableId: 'tbl-evaluations',
-    apiGet: 'get_evaluations', apiCreate: 'create_evaluation',
-    apiUpdate: 'update_evaluation', apiDelete: 'delete_evaluation',
-    cols: [{key:'title',label:'Evaluación'},{key:'type',label:'Tipo'},
-           {key:'date',label:'Fecha',date:true},{key:'max_score',label:'Puntaje'},
-           {key:'weight',label:'Peso %'},{key:'status',label:'Estado',badge:true}],
+    title:'Evaluación', tableId:'tbl-evaluations',
+    apiGet:'get_evaluations', apiCreate:'create_evaluation', apiUpdate:'update_evaluation', apiDelete:'delete_evaluation',
+    cols:[{key:'title',label:'Evaluación'},{key:'type',label:'Tipo',badge:true},
+          {key:'date',label:'Fecha',date:true},{key:'max_score',label:'Puntaje'},
+          {key:'weight',label:'Peso %'},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.evaluation.edit',cls:'btn-secondary'},
                       {label:'📊 Resultados',fn:'openEvalGrading',cls:'btn-success btn-sm'},
                       {label:'🗑️',fn:'M.evaluation.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'title',label:'Título de la evaluación',required:true},
-      {name:'type',label:'Tipo',type:'select',options:[
-        {value:'exam',label:'Examen'},{value:'quiz',label:'Quiz'},
-        {value:'project',label:'Proyecto'},{value:'oral',label:'Oral'},
-        {value:'practical',label:'Práctica'},{value:'other',label:'Otro'}]},
-      {name:'date',label:'Fecha',type:'date'},
-      {name:'max_score',label:'Puntaje máximo',type:'number',default:100},
-      {name:'weight',label:'Peso en calificación (%)',type:'number'},
-      {name:'description',label:'Descripción',type:'textarea',full:true},
-    ],
-    onLoad: async (r) => { if(r) { State.evaluations = r.rows; populateSelects(); } }
+    fields:[{name:'title',label:'Título',required:true,full:true},
+            {name:'type',label:'Tipo',type:'select',options:[{value:'exam',label:'Examen'},
+              {value:'quiz',label:'Quiz'},{value:'project',label:'Proyecto'},
+              {value:'practical',label:'Práctica'},{value:'oral',label:'Oral'}]},
+            {name:'date',label:'Fecha',type:'date'},{name:'max_score',label:'Puntaje máx',type:'number',default:100},
+            {name:'weight',label:'Peso en calificación (%)',type:'number'},
+            {name:'description',label:'Descripción',type:'textarea',full:true}],
+    onLoad: (r) => { if(r) { State.evaluations = r.rows; populateSelects(); } },
   }),
-
   observation: makeModule({
-    title: 'Observación', tableId: 'tbl-observations',
-    apiGet: 'get_observations', apiCreate: 'create_observation', apiUpdate: 'update_observation',
-    cols: [{key:'type',label:'Tipo'},{key:'content',label:'Observación'},
-           {key:'visibility',label:'Visibilidad'},{key:'created_at',label:'Fecha',date:true}],
+    title:'Observación', tableId:'tbl-observations',
+    apiGet:'get_observations', apiCreate:'create_observation', apiUpdate:'update_observation', apiDelete:'update_observation',
+    cols:[{key:'student_id',label:'Alumno',format:(r)=>State.students.find(s=>s.id===r.student_id)?.name||r.student_id},
+          {key:'type',label:'Tipo',badge:true},{key:'content',label:'Observación'},
+          {key:'created_at',label:'Fecha',date:true}],
     actions: () => [{label:'✏️',fn:'M.observation.edit',cls:'btn-secondary'}],
     get fields() { return [
-      {name:'student_id',label:'Alumno',required:true,type:'select',
-        options:State.students.map(s=>({value:s.id,label:s.name}))},
-      {name:'type',label:'Tipo',type:'select',options:[
-        {value:'academic',label:'Académica'},{value:'behavioral',label:'Conductual'},
-        {value:'participation',label:'Participación'},{value:'recognition',label:'Reconocimiento'}]},
+      {name:'student_id',label:'Alumno',required:true,type:'select',options:State.students.map(s=>({value:s.id,label:s.name}))},
+      {name:'type',label:'Tipo',type:'select',options:[{value:'academic',label:'Académica'},
+        {value:'behavioral',label:'Conductual'},{value:'participation',label:'Participación'},
+        {value:'recognition',label:'Reconocimiento'}]},
       {name:'content',label:'Observación',required:true,type:'textarea',full:true},
-      {name:'visibility',label:'Visibilidad',type:'select',options:[
-        {value:'private',label:'Privada (solo docente)'},{value:'coordinators',label:'Coordinadores'},
-        {value:'parents',label:'Padres/Tutores'},{value:'all',label:'Todos'}]},
+      {name:'visibility',label:'Visibilidad',type:'select',options:[{value:'private',label:'Privada'},
+        {value:'coordinators',label:'Coordinadores'},{value:'all',label:'Todos'}]},
     ]; },
   }),
-
   announcement: makeModule({
-    title: 'Anuncio', tableId: '',
-    apiGet: 'get_announcements', apiCreate: 'create_announcement',
-    apiUpdate: 'create_announcement', apiDelete: 'delete_announcement',
-    cols: [], actions: () => [],
-    fields: [
-      {name:'title',label:'Título',required:true,full:true},
-      {name:'content',label:'Contenido',required:true,type:'textarea',full:true},
-      {name:'target_type',label:'Destinatario',type:'select',options:[
-        {value:'all',label:'Todos'},{value:'group',label:'Grupo específico'},
-        {value:'teachers',label:'Solo docentes'}]},
-    ],
+    title:'Anuncio', tableId:'',
+    apiGet:'get_announcements', apiCreate:'create_announcement',
+    apiUpdate:'create_announcement', apiDelete:'delete_announcement',
+    cols:[], actions:()=>[],
+    fields:[{name:'title',label:'Título',required:true,full:true},
+            {name:'content',label:'Contenido',required:true,type:'textarea',full:true},
+            {name:'target_type',label:'Destinatario',type:'select',options:[
+              {value:'all',label:'Todos'},{value:'teachers',label:'Docentes'},{value:'parents',label:'Tutores'}]}],
     onLoad: loadAnnouncements,
   }),
-
   user: makeModule({
-    title: 'Usuario', tableId: 'tbl-users',
-    apiGet: 'get_users', apiCreate: 'create_user',
-    apiUpdate: 'update_user', apiDelete: 'delete_user',
-    cols: [{key:'name',label:'Nombre'},{key:'username',label:'Usuario'},
-           {key:'role',label:'Rol'},{key:'status',label:'Estado',badge:true}],
+    title:'Usuario', tableId:'tbl-users',
+    apiGet:'get_users', apiCreate:'create_user', apiUpdate:'update_user', apiDelete:'delete_user',
+    cols:[{key:'name',label:'Nombre'},{key:'username',label:'Usuario'},
+          {key:'role',label:'Rol',badge:true},{key:'status',label:'Estado',badge:true}],
     actions: self => [{label:'✏️',fn:'M.user.edit',cls:'btn-secondary'},
                       {label:'🗑️',fn:'M.user.del',cls:'btn-danger btn-sm'}],
-    fields: [
-      {name:'name',label:'Nombre completo',required:true},
-      {name:'username',label:'Nombre de usuario',required:true},
-      {name:'password',label:'Contraseña',type:'password',hint:'Dejar vacío para no cambiar'},
-      {name:'role',label:'Rol',type:'select',options:[
-        {value:'admin',label:'Administrador'},{value:'director',label:'Director'},
-        {value:'coordinator',label:'Coordinador'},{value:'teacher',label:'Docente'},
-        {value:'student',label:'Alumno'},{value:'tutor',label:'Tutor'}]},
-    ],
+    fields:[{name:'name',label:'Nombre completo',required:true},
+            {name:'username',label:'Usuario',required:true},
+            {name:'password',label:'Contraseña',type:'password'},
+            {name:'role',label:'Rol',type:'select',options:[{value:'admin',label:'Administrador'},
+              {value:'director',label:'Director'},{value:'coordinator',label:'Coordinador'},
+              {value:'teacher',label:'Docente'},{value:'student',label:'Alumno'}]}],
   }),
 };
 
-/* ── GRADING MODALS ──────────────────────────────────── */
-async function openGrading(activityId) {
-  const acts = await api('get_activities');
-  const act  = acts?.rows?.find(a => a.id === activityId);
-  if (!act) return;
-  const enrolled = State.students;
-  const html = `
-    <div class="alert alert-info">Calificando: <b>${act.title}</b> — Puntaje máx: ${act.max_score||100}</div>
-    <div style="font-size:12px;font-weight:600;color:var(--muted);display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;padding:6px 0;border-bottom:2px solid var(--border);margin-bottom:8px">
-      <span>Alumno</span><span>Puntaje</span><span>Retroalimentación</span>
-    </div>
-    <div id="grade-rows">${enrolled.map(s=>`
-      <div class="grade-row">
-        <span>${s.name}</span>
-        <input type="number" id="gs-${s.id}" min="0" max="${act.max_score||100}" value="" placeholder="—" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:70px">
-        <input type="text" id="gf-${s.id}" placeholder="Comentario…" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:100%">
-      </div>`).join('')}
-    </div>`;
-  openModal('Calificar Actividad', html, async () => {
-    const grades = enrolled
-      .filter(s => document.getElementById('gs-'+s.id)?.value !== '')
-      .map(s => ({
-        student_id: s.id,
-        score: document.getElementById('gs-'+s.id)?.value || 0,
-        feedback: document.getElementById('gf-'+s.id)?.value || '',
-      }));
-    const r = await api('bulk_grade', { activity_id: activityId, max_score: act.max_score||100, grades });
-    if (r) { toast(`${r.count} calificaciones guardadas`, 'ok'); closeModal(); }
-  }, 'Guardar calificaciones');
-}
-
-async function openEvalGrading(evalId) {
-  const evals = await api('get_evaluations');
-  const ev    = evals?.rows?.find(e => e.id === evalId);
-  if (!ev) return;
-  const enrolled = State.students;
-  const html = `
-    <div class="alert alert-info">Evaluación: <b>${ev.title}</b> — Puntaje máx: ${ev.max_score||100}</div>
-    <div style="font-size:12px;font-weight:600;color:var(--muted);display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;padding:6px 0;border-bottom:2px solid var(--border);margin-bottom:8px">
-      <span>Alumno</span><span>Puntaje</span><span>Retroalimentación</span>
-    </div>
-    <div>${enrolled.map(s=>`
-      <div class="grade-row">
-        <span>${s.name}</span>
-        <input type="number" id="es-${s.id}" min="0" max="${ev.max_score||100}" placeholder="—" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:70px">
-        <input type="text" id="ef-${s.id}" placeholder="Comentario…" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;width:100%">
-      </div>`).join('')}
-    </div>`;
-  openModal('Registrar Resultados', html, async () => {
-    const grades = enrolled
-      .filter(s => document.getElementById('es-'+s.id)?.value !== '')
-      .map(s => ({
-        student_id: s.id,
-        score: document.getElementById('es-'+s.id)?.value || 0,
-        feedback: document.getElementById('ef-'+s.id)?.value || '',
-      }));
-    const r = await api('save_results', { evaluation_id: evalId, max_score: ev.max_score||100, grades });
-    if (r) { toast(`${r.count} resultados guardados`, 'ok'); closeModal(); }
-  }, 'Guardar resultados');
-}
-
-/* ── EDIT HELPERS ────────────────────────────────────── */
-async function editAttendance(id) {
-  openModal('Editar Asistencia', buildForm([
-    {name:'status',label:'Estado',type:'select',options:[
-      {value:'present',label:'Presente'},{value:'absent',label:'Ausente'},
-      {value:'late',label:'Retardo'},{value:'justified',label:'Justificado'}]},
-    {name:'notes',label:'Notas',type:'textarea',full:true},
-  ]), async () => {
-    const d = formData([{name:'status'},{name:'notes'}]);
-    const r = await api('update_attendance', { id, ...d });
-    if (r) { toast('Asistencia actualizada', 'ok'); closeModal(); loadAttendanceView(); }
-  });
-}
-
 /* ── STARTUP ─────────────────────────────────────────── */
-window.addEventListener('load', () => {
-  // Auto-login si ya hay sesión guardada
-  if (State.token && State.user) {
-    initApp();
-  } else {
-    document.getElementById('login-page').style.display = 'flex';
-  }
-});
-
-// Close modal on overlay click
 document.getElementById('modal-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
+});
+
+window.addEventListener('load', () => {
+  // Si ya hay sesión guardada, entrar directo
+  if (State.token && State.user && !API_URL.includes('TU_URL_AQUI')) {
+    initApp();
+  }
+  // Si no, el login ya está visible por defecto (display:flex en el HTML)
 });
 </script>
 </body>
